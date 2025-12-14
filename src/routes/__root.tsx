@@ -12,7 +12,6 @@ import { defineI18nUI } from 'fumadocs-ui/i18n'
 import appCss from '../styles.css?url'
 import { i18n } from '@/lib/i18n'
 
-
 const { provider } = defineI18nUI(i18n, {
   translations: {
     id: {
