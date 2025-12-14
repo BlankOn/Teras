@@ -1,305 +1,170 @@
-Welcome to your new TanStack app!
+# Teras
 
-# Getting Started
+Official Homepage, Documentation, and Developer Wiki for [BlankOn Linux](https://blankon.id) — an Indonesian Linux distribution based on Debian.
 
-To run this application:
+> **Teras** (Indonesian for "porch/terrace") serves as the central hub for showcasing BlankOn, providing user documentation, and hosting developer guides.
+
+## Tech Stack
+
+- **React 19** + **TanStack Start/Router** — Full-stack React with SSR
+- **Fumadocs** — Documentation framework with MDX support
+- **Tailwind CSS v4** — Styling with shadcn/ui components
+- **Cloudflare Workers** — Edge deployment
+
+## Getting Started
 
 ```bash
 npm install
-npm run start
+npm run dev      # Start dev server on port 3000
 ```
 
-# Building For Production
+## Scripts
 
-To build this application for production:
+| Command          | Description                          |
+| ---------------- | ------------------------------------ |
+| `npm run dev`    | Start development server             |
+| `npm run build`  | Build for production                 |
+| `npm run test`   | Run tests (Vitest)                   |
+| `npm run lint`   | Run ESLint                           |
+| `npm run check`  | Format with Prettier and fix linting |
+| `npm run deploy` | Deploy to Cloudflare Workers         |
+
+## Project Structure
+
+```
+teras/
+├── content/           # MDX documentation content
+│   ├── docs/          # User documentation (Panduan Pengguna)
+│   └── dev/           # Developer wiki (Wiki Pengembangan)
+├── public/            # Static assets
+├── src/
+│   ├── lib/           # Utilities, i18n, content sources
+│   └── routes/        # TanStack Router file-based routes
+├── openspec/          # Specifications and change proposals
+└── AGENTS.md          # AI assistant instructions
+```
+
+## Internationalization
+
+- **Default**: Indonesian (`id`)
+- **Supported**: Indonesian, English (`en`)
+- **URL structure**: `/{lang}/path` (e.g., `/id/docs`, `/en/docs`)
+
+Content files use suffix convention:
+
+- `index.mdx` — Indonesian (default)
+- `index.en.mdx` — English
+
+## Contributing
+
+### Code Style
+
+This project enforces consistent code style via Prettier and ESLint:
+
+- **No semicolons** — Omit semicolons at end of statements
+- **Single quotes** — Use `'single quotes'` for strings
+- **Trailing commas** — Always include trailing commas in multiline structures
+- **Strict TypeScript** — No unused locals/parameters, strict mode enabled
+- **Path aliases** — Use `@/*` for `./src/*` imports
+
+**Naming conventions:**
+
+| Type                | Convention | Example                     |
+| ------------------- | ---------- | --------------------------- |
+| Components          | PascalCase | `DownloadPage`, `SearchBar` |
+| Functions/variables | camelCase  | `getUserData`, `isLoading`  |
+| Route parameters    | $prefix    | `$lang`, `$.tsx` (splat)    |
+
+**Import order:**
+
+1. External packages (`react`, `@tanstack/*`, `fumadocs-*`)
+2. Internal imports using `@/` alias
+
+Run `npm run check` before committing.
+
+### Git Conventions
+
+Use [Conventional Commits](https://www.conventionalcommits.org/) format:
+
+```
+<type>: <description>
+```
+
+| Type       | Purpose                                  |
+| ---------- | ---------------------------------------- |
+| `feat`     | New feature                              |
+| `fix`      | Bug fix                                  |
+| `docs`     | Documentation changes                    |
+| `style`    | Code style (formatting, no logic change) |
+| `refactor` | Code refactoring (no feature/fix)        |
+| `test`     | Adding or updating tests                 |
+| `chore`    | Maintenance tasks, dependencies, configs |
+
+**Examples:**
+
+```
+feat: add download page with ISO links
+fix: resolve search API language detection
+docs: update installation guide for BlankOn 16
+chore: update fumadocs dependencies
+```
+
+### Standard Workflow
+
+1. Fork and clone the repository
+2. Create a feature branch
+3. Make changes and run `npm run check`
+4. Submit a pull request
+
+### Contributing with AI Assistants (LLM)
+
+This project uses **OpenSpec** for spec-driven development. AI assistants (Claude, Copilot, Cursor, etc.) must follow these guidelines:
+
+#### Required Reading
+
+| File                                           | Purpose                                     |
+| ---------------------------------------------- | ------------------------------------------- |
+| [`AGENTS.md`](./AGENTS.md)                     | Build commands, code style, git conventions |
+| [`openspec/AGENTS.md`](./openspec/AGENTS.md)   | Spec-driven development workflow            |
+| [`openspec/project.md`](./openspec/project.md) | Project context and conventions             |
+
+#### When to Create a Proposal
+
+Create an OpenSpec proposal (`openspec/changes/[change-id]/`) for:
+
+- New features or capabilities
+- Breaking changes (API, schema, architecture)
+- Performance or security changes that affect behavior
+
+#### When to Skip Proposals
+
+Proceed directly for:
+
+- Bug fixes restoring intended behavior
+- Typos, formatting, comments
+- Non-breaking dependency updates
+- Configuration changes
+- Tests for existing behavior
+
+#### OpenSpec Workflow
+
+1. **Create** — Scaffold proposal with `proposal.md`, `tasks.md`, and spec deltas
+2. **Implement** — Follow `tasks.md` checklist after approval
+3. **Archive** — Move to `changes/archive/` after deployment
 
 ```bash
-npm run build
+# Validate a change proposal
+openspec validate [change-id] --strict
+
+# List active changes
+openspec list
+
+# List specifications
+openspec list --specs
 ```
 
-## Testing
+See [`openspec/AGENTS.md`](./openspec/AGENTS.md) for complete instructions.
 
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
+## License
 
-```bash
-npm run test
-```
-
-## Styling
-
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
-
-## Linting & Formatting
-
-This project uses [eslint](https://eslint.org/) and [prettier](https://prettier.io/) for linting and formatting. Eslint is configured using [tanstack/eslint-config](https://tanstack.com/config/latest/docs/eslint). The following scripts are available:
-
-```bash
-npm run lint
-npm run format
-npm run check
-```
-
-## Shadcn
-
-Add components using the latest version of [Shadcn](https://ui.shadcn.com/).
-
-```bash
-pnpm dlx shadcn@latest add button
-```
-
-## Routing
-
-This project uses [TanStack Router](https://tanstack.com/router). The initial setup is a file based router. Which means that the routes are managed as files in `src/routes`.
-
-### Adding A Route
-
-To add a new route to your application just add another a new file in the `./src/routes` directory.
-
-TanStack will automatically generate the content of the route file for you.
-
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from '@tanstack/react-router'
-```
-
-Then anywhere in your JSX you can use it like so:
-
-```tsx
-<Link to="/about">About</Link>
-```
-
-This will create a link that will navigate to the `/about` route.
-
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you use the `<Outlet />` component.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { Outlet, createRootRoute } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-
-import { Link } from '@tanstack/react-router'
-
-export const Route = createRootRoute({
-  component: () => (
-    <>
-      <header>
-        <nav>
-          <Link to="/">Home</Link>
-          <Link to="/about">About</Link>
-        </nav>
-      </header>
-      <Outlet />
-      <TanStackRouterDevtools />
-    </>
-  ),
-})
-```
-
-The `<TanStackRouterDevtools />` component is not required so you can remove it if you don't want it in your layout.
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-const peopleRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/people',
-  loader: async () => {
-    const response = await fetch('https://swapi.dev/api/people')
-    return response.json() as Promise<{
-      results: {
-        name: string
-      }[]
-    }>
-  },
-  component: () => {
-    const data = peopleRoute.useLoaderData()
-    return (
-      <ul>
-        {data.results.map((person) => (
-          <li key={person.name}>{person.name}</li>
-        ))}
-      </ul>
-    )
-  },
-})
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-### React-Query
-
-React-Query is an excellent addition or alternative to route loading and integrating it into you application is a breeze.
-
-First add your dependencies:
-
-```bash
-npm install @tanstack/react-query @tanstack/react-query-devtools
-```
-
-Next we'll need to create a query client and provider. We recommend putting those in `main.tsx`.
-
-```tsx
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-
-// ...
-
-const queryClient = new QueryClient()
-
-// ...
-
-if (!rootElement.innerHTML) {
-  const root = ReactDOM.createRoot(rootElement)
-
-  root.render(
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>,
-  )
-}
-```
-
-You can also add TanStack Query Devtools to the root route (optional).
-
-```tsx
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-
-const rootRoute = createRootRoute({
-  component: () => (
-    <>
-      <Outlet />
-      <ReactQueryDevtools buttonPosition="top-right" />
-      <TanStackRouterDevtools />
-    </>
-  ),
-})
-```
-
-Now you can use `useQuery` to fetch your data.
-
-```tsx
-import { useQuery } from '@tanstack/react-query'
-
-import './App.css'
-
-function App() {
-  const { data } = useQuery({
-    queryKey: ['people'],
-    queryFn: () =>
-      fetch('https://swapi.dev/api/people')
-        .then((res) => res.json())
-        .then((data) => data.results as { name: string }[]),
-    initialData: [],
-  })
-
-  return (
-    <div>
-      <ul>
-        {data.map((person) => (
-          <li key={person.name}>{person.name}</li>
-        ))}
-      </ul>
-    </div>
-  )
-}
-
-export default App
-```
-
-You can find out everything you need to know on how to use React-Query in the [React-Query documentation](https://tanstack.com/query/latest/docs/framework/react/overview).
-
-## State Management
-
-Another common requirement for React applications is state management. There are many options for state management in React. TanStack Store provides a great starting point for your project.
-
-First you need to add TanStack Store as a dependency:
-
-```bash
-npm install @tanstack/store
-```
-
-Now let's create a simple counter in the `src/App.tsx` file as a demonstration.
-
-```tsx
-import { useStore } from '@tanstack/react-store'
-import { Store } from '@tanstack/store'
-import './App.css'
-
-const countStore = new Store(0)
-
-function App() {
-  const count = useStore(countStore)
-  return (
-    <div>
-      <button onClick={() => countStore.setState((n) => n + 1)}>
-        Increment - {count}
-      </button>
-    </div>
-  )
-}
-
-export default App
-```
-
-One of the many nice features of TanStack Store is the ability to derive state from other state. That derived state will update when the base state updates.
-
-Let's check this out by doubling the count using derived state.
-
-```tsx
-import { useStore } from '@tanstack/react-store'
-import { Store, Derived } from '@tanstack/store'
-import './App.css'
-
-const countStore = new Store(0)
-
-const doubledStore = new Derived({
-  fn: () => countStore.state * 2,
-  deps: [countStore],
-})
-doubledStore.mount()
-
-function App() {
-  const count = useStore(countStore)
-  const doubledCount = useStore(doubledStore)
-
-  return (
-    <div>
-      <button onClick={() => countStore.setState((n) => n + 1)}>
-        Increment - {count}
-      </button>
-      <div>Doubled - {doubledCount}</div>
-    </div>
-  )
-}
-
-export default App
-```
-
-We use the `Derived` class to create a new store that is derived from another store. The `Derived` class has a `mount` method that will start the derived store updating.
-
-Once we've created the derived store we can use it in the `App` component just like we would any other store using the `useStore` hook.
-
-You can find out everything you need to know on how to use TanStack Store in the [TanStack Store documentation](https://tanstack.com/store/latest).
-
-# Demo files
-
-Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
+MIT License — see [LICENSE](./LICENSE) for details.
