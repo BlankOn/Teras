@@ -1,8 +1,11 @@
 # routing Specification
 
 ## Purpose
+
 TBD - created by archiving change document-existing-codebase. Update Purpose after archive.
+
 ## Requirements
+
 ### Requirement: File-Based Routing
 
 The system SHALL use TanStack Router file-based routing with routes defined in `src/routes/`.
@@ -85,4 +88,3 @@ The route tree SHALL be auto-generated in `src/routeTree.gen.ts` with full TypeS
 - **WHEN** routes are defined in `src/routes/`
 - **THEN** `routeTree.gen.ts` exports typed route definitions
 - **AND** `FileRoutesByFullPath` interface includes all route paths
-

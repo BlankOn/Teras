@@ -1,8 +1,11 @@
 # layout-theming Specification
 
 ## Purpose
+
 TBD - created by archiving change document-existing-codebase. Update Purpose after archive.
+
 ## Requirements
+
 ### Requirement: Root Layout Provider Hierarchy
 
 The root layout SHALL wrap all routes with TanStack and Fumadocs providers in the correct order.
@@ -136,4 +139,3 @@ The navigation SHALL include links to all main site sections with proper active 
 
 - **WHEN** user is on a documentation page
 - **THEN** the Docs link has `active: 'nested-url'` highlighting
-

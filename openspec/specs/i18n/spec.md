@@ -1,8 +1,11 @@
 # i18n Specification
 
 ## Purpose
+
 TBD - created by archiving change document-existing-codebase. Update Purpose after archive.
+
 ## Requirements
+
 ### Requirement: Language Configuration
 
 The system SHALL define supported languages using Fumadocs `defineI18n` with Indonesian as the default language.
@@ -96,4 +99,3 @@ The layout SHALL provide a language switcher allowing users to change between su
 - **WHEN** a page is displayed
 - **THEN** a language switcher is available in the navigation
 - **AND** it shows all supported languages with their display names
-

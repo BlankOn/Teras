@@ -1,8 +1,11 @@
 # docs-content Specification
 
 ## Purpose
+
 TBD - created by archiving change document-existing-codebase. Update Purpose after archive.
+
 ## Requirements
+
 ### Requirement: Content Collections
 
 The system SHALL define MDX content collections using Fumadocs `defineDocs` in `source.config.ts`.
@@ -305,4 +308,3 @@ graph TD
 ```
 
 - **AND** the static image `produk-sendiri.png` is no longer used
-

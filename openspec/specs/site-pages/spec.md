@@ -1,8 +1,11 @@
 # site-pages Specification
 
 ## Purpose
+
 TBD - created by archiving change document-existing-codebase. Update Purpose after archive.
+
 ## Requirements
+
 ### Requirement: Homepage Structure
 
 The homepage SHALL display a centered layout with the BlankOn title and localized welcome message.
@@ -101,4 +104,3 @@ The public directory SHALL contain logo variants and PWA assets.
 - **WHEN** PWA is installed
 - **THEN** `/logo192.png` and `/logo512.png` are available
 - **AND** `/manifest.json` defines the web app manifest
-

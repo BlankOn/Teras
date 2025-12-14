@@ -1,8 +1,11 @@
 # search-api Specification
 
 ## Purpose
+
 TBD - created by archiving change document-existing-codebase. Update Purpose after archive.
+
 ## Requirements
+
 ### Requirement: Search API Endpoint
 
 The system SHALL provide a search API at `/api/search` that handles GET requests.
@@ -80,4 +83,3 @@ Search results SHALL be filtered to only return documents matching the requested
 - **WHEN** search is performed with `locale=en`
 - **THEN** only English content is returned in results
 - **AND** Indonesian content is excluded
-
