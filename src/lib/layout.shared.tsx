@@ -26,6 +26,16 @@ const translations = {
     dev: 'Wiki Pengembangan',
     welcome: 'Selamat datang di BlankOn',
     downloadDesc: 'Halaman unduh BlankOn',
+    feedback: {
+      question: 'Bagaimana panduan ini?',
+      good: 'Bagus',
+      bad: 'Kurang',
+      placeholder: 'Tulis masukan Anda...',
+      submit: 'Kirim',
+      thanks: 'Terima kasih atas masukan Anda!',
+      viewOnGithub: 'Lihat di GitHub',
+      submitAgain: 'Kirim Lagi',
+    },
   },
   en: {
     home: 'Home',
@@ -34,11 +44,24 @@ const translations = {
     dev: 'Developer Wiki',
     welcome: 'Welcome to BlankOn',
     downloadDesc: 'BlankOn download page',
+    feedback: {
+      question: 'How is this guide?',
+      good: 'Good',
+      bad: 'Bad',
+      placeholder: 'Leave your feedback...',
+      submit: 'Submit',
+      thanks: 'Thank you for your feedback!',
+      viewOnGithub: 'View on GitHub',
+      submitAgain: 'Submit Again',
+    },
   },
 }
 
 export function getTranslations(locale: string) {
-  return translations[locale as keyof typeof translations] || translations.id
+  if (locale in translations) {
+    return translations[locale as keyof typeof translations]
+  }
+  return translations.id
 }
 
 export function baseOptions(locale: string): BaseLayoutProps {

@@ -1,4 +1,4 @@
-import { createFileRoute, notFound } from '@tanstack/react-router'
+import { createFileRoute, notFound, useLocation } from '@tanstack/react-router'
 import { DocsLayout } from 'fumadocs-ui/layouts/docs'
 import { createServerFn } from '@tanstack/react-start'
 import browserCollections from 'fumadocs-mdx:collections/browser'
@@ -10,7 +10,8 @@ import {
 } from 'fumadocs-ui/layouts/docs/page'
 import defaultMdxComponents from 'fumadocs-ui/mdx'
 import { useFumadocsLoader } from 'fumadocs-core/source/client'
-import { baseOptions } from '@/lib/layout.shared'
+import { baseOptions, getTranslations } from '@/lib/layout.shared'
+import { FeedbackFromContext, FeedbackProvider } from '@/components/feedback'
 import { devSource } from '@/lib/source'
 import { Mermaid } from '@/components/mdx/mermaid'
 
@@ -56,6 +57,7 @@ const clientLoader = browserCollections.dev.createClientLoader({
             }}
           />
         </DocsBody>
+        <FeedbackFromContext />
       </DocsPage>
     )
   },
@@ -66,10 +68,14 @@ function Page() {
   const data = Route.useLoaderData()
   const { pageTree } = useFumadocsLoader(data)
   const Content = clientLoader.getComponent(data.path)
+  const location = useLocation()
+  const t = getTranslations(lang)
 
   return (
-    <DocsLayout {...baseOptions(lang)} tree={pageTree}>
-      <Content />
-    </DocsLayout>
+    <FeedbackProvider url={location.pathname} translations={t.feedback}>
+      <DocsLayout {...baseOptions(lang)} tree={pageTree}>
+        <Content />
+      </DocsLayout>
+    </FeedbackProvider>
   )
 }
