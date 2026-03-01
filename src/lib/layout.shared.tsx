@@ -22,8 +22,7 @@ const translations = {
   id: {
     home: 'Beranda',
     download: 'Unduh',
-    docs: 'Panduan Pengguna',
-    dev: 'Wiki Pengembangan',
+    wiki: 'Wiki',
     welcome: 'Selamat datang di BlankOn',
     downloadDesc: 'Halaman unduh BlankOn',
     feedback: {
@@ -66,8 +65,7 @@ const translations = {
   en: {
     home: 'Home',
     download: 'Download',
-    docs: 'User Guide',
-    dev: 'Developer Wiki',
+    wiki: 'Wiki',
     welcome: 'Welcome to BlankOn',
     downloadDesc: 'BlankOn download page',
     feedback: {
@@ -137,13 +135,8 @@ export function baseOptions(locale: string): BaseLayoutProps {
         active: 'nested-url',
       },
       {
-        text: t.docs,
-        url: `/${locale}/docs`,
-        active: 'nested-url',
-      },
-      {
-        text: t.dev,
-        url: `/${locale}/dev`,
+        text: t.wiki,
+        url: `/${locale}/wiki`,
         active: 'nested-url',
       },
     ],

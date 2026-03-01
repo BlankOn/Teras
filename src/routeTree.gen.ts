@@ -13,8 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as LangIndexRouteImport } from './routes/$lang/index'
 import { Route as ApiSearchRouteImport } from './routes/api/search'
 import { Route as LangDownloadRouteImport } from './routes/$lang/download'
-import { Route as LangDocsSplatRouteImport } from './routes/$lang/docs/$'
-import { Route as LangDevSplatRouteImport } from './routes/$lang/dev/$'
+import { Route as LangWikiSplatRouteImport } from './routes/$lang/wiki/$'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -36,14 +35,9 @@ const LangDownloadRoute = LangDownloadRouteImport.update({
   path: '/$lang/download',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LangDocsSplatRoute = LangDocsSplatRouteImport.update({
-  id: '/$lang/docs/$',
-  path: '/$lang/docs/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LangDevSplatRoute = LangDevSplatRouteImport.update({
-  id: '/$lang/dev/$',
-  path: '/$lang/dev/$',
+const LangWikiSplatRoute = LangWikiSplatRouteImport.update({
+  id: '/$lang/wiki/$',
+  path: '/$lang/wiki/$',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -52,16 +46,14 @@ export interface FileRoutesByFullPath {
   '/$lang/download': typeof LangDownloadRoute
   '/api/search': typeof ApiSearchRoute
   '/$lang': typeof LangIndexRoute
-  '/$lang/dev/$': typeof LangDevSplatRoute
-  '/$lang/docs/$': typeof LangDocsSplatRoute
+  '/$lang/wiki/$': typeof LangWikiSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$lang/download': typeof LangDownloadRoute
   '/api/search': typeof ApiSearchRoute
   '/$lang': typeof LangIndexRoute
-  '/$lang/dev/$': typeof LangDevSplatRoute
-  '/$lang/docs/$': typeof LangDocsSplatRoute
+  '/$lang/wiki/$': typeof LangWikiSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -69,8 +61,7 @@ export interface FileRoutesById {
   '/$lang/download': typeof LangDownloadRoute
   '/api/search': typeof ApiSearchRoute
   '/$lang/': typeof LangIndexRoute
-  '/$lang/dev/$': typeof LangDevSplatRoute
-  '/$lang/docs/$': typeof LangDocsSplatRoute
+  '/$lang/wiki/$': typeof LangWikiSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -79,24 +70,16 @@ export interface FileRouteTypes {
     | '/$lang/download'
     | '/api/search'
     | '/$lang'
-    | '/$lang/dev/$'
-    | '/$lang/docs/$'
+    | '/$lang/wiki/$'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/$lang/download'
-    | '/api/search'
-    | '/$lang'
-    | '/$lang/dev/$'
-    | '/$lang/docs/$'
+  to: '/' | '/$lang/download' | '/api/search' | '/$lang' | '/$lang/wiki/$'
   id:
     | '__root__'
     | '/'
     | '/$lang/download'
     | '/api/search'
     | '/$lang/'
-    | '/$lang/dev/$'
-    | '/$lang/docs/$'
+    | '/$lang/wiki/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -104,8 +87,7 @@ export interface RootRouteChildren {
   LangDownloadRoute: typeof LangDownloadRoute
   ApiSearchRoute: typeof ApiSearchRoute
   LangIndexRoute: typeof LangIndexRoute
-  LangDevSplatRoute: typeof LangDevSplatRoute
-  LangDocsSplatRoute: typeof LangDocsSplatRoute
+  LangWikiSplatRoute: typeof LangWikiSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -138,18 +120,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LangDownloadRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/$lang/docs/$': {
-      id: '/$lang/docs/$'
-      path: '/$lang/docs/$'
-      fullPath: '/$lang/docs/$'
-      preLoaderRoute: typeof LangDocsSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/$lang/dev/$': {
-      id: '/$lang/dev/$'
-      path: '/$lang/dev/$'
-      fullPath: '/$lang/dev/$'
-      preLoaderRoute: typeof LangDevSplatRouteImport
+    '/$lang/wiki/$': {
+      id: '/$lang/wiki/$'
+      path: '/$lang/wiki/$'
+      fullPath: '/$lang/wiki/$'
+      preLoaderRoute: typeof LangWikiSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -160,8 +135,7 @@ const rootRouteChildren: RootRouteChildren = {
   LangDownloadRoute: LangDownloadRoute,
   ApiSearchRoute: ApiSearchRoute,
   LangIndexRoute: LangIndexRoute,
-  LangDevSplatRoute: LangDevSplatRoute,
-  LangDocsSplatRoute: LangDocsSplatRoute,
+  LangWikiSplatRoute: LangWikiSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

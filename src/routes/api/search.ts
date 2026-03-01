@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { createI18nSearchAPI } from 'fumadocs-core/search/server'
-import { devSource, source } from '@/lib/source'
+import { wikiSource } from '@/lib/source'
 import { i18n } from '@/lib/i18n'
 
 const server = createI18nSearchAPI('advanced', {
@@ -10,9 +10,8 @@ const server = createI18nSearchAPI('advanced', {
     en: 'english',
   },
   indexes: i18n.languages.flatMap((lang) => {
-    const docsPages = source.getPages(lang)
-    const devPages = devSource.getPages(lang)
-    return [...docsPages, ...devPages].map((page) => ({
+    const wikiPages = wikiSource.getPages(lang)
+    return wikiPages.map((page) => ({
       locale: lang,
       id: page.url,
       title: page.data.title,

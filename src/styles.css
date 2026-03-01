@@ -137,3 +137,18 @@ code {
     @apply bg-background text-foreground;
   }
 }
+
+/* Hide chevron icons for sidebar items without children */
+@layer components {
+  /* Hide all chevron buttons by default */
+  [data-sidebar] button[data-collapsible] {
+    @apply hidden;
+  }
+
+  /* Only show chevron for items that have children (nested ul) */
+  [data-sidebar] li:has(> ul) > button[data-collapsible],
+  [data-sidebar] li:has(> div > ul) > button[data-collapsible],
+  [data-sidebar] div:has(> ul) > button[data-collapsible] {
+    @apply block;
+  }
+}

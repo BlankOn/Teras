@@ -9,10 +9,6 @@ export default defineConfig({
   },
 })
 
-export const docs = defineDocs({
-  dir: 'content/docs',
-})
-
-export const dev = defineDocs({
-  dir: 'content/dev',
+export const wiki = defineDocs({
+  dir: 'content/wiki',
 })

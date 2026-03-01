@@ -20,23 +20,26 @@ npm run dev      # Start dev server on port 3000
 
 ## Scripts
 
-| Command          | Description                          |
-| ---------------- | ------------------------------------ |
-| `npm run dev`    | Start development server             |
-| `npm run build`  | Build for production                 |
-| `npm run test`   | Run tests (Vitest)                   |
-| `npm run lint`   | Run ESLint                           |
-| `npm run check`  | Format with Prettier and fix linting |
-| `npm run deploy` | Deploy to Cloudflare Workers         |
+| Command            | Description                                    |
+| ------------------ | ---------------------------------------------- |
+| `npm run dev`      | Start development server                       |
+| `npm run sync-wiki`| Clone revival repo and sync wiki content       |
+| `npm run build`    | Build for production (auto-syncs wiki first)   |
+| `npm run test`     | Run tests (Vitest)                             |
+| `npm run lint`     | Run ESLint                                     |
+| `npm run check`    | Format with Prettier and fix linting           |
+| `npm run deploy`   | Deploy to Cloudflare Workers                   |
 
 ## Project Structure
 
 ```
 teras/
 ├── content/           # MDX documentation content
-│   ├── docs/          # User documentation (Panduan Pengguna)
-│   └── dev/           # Developer wiki (Wiki Pengembangan)
+│   └── wiki/          # Wiki content (auto-generated from revival repo)
 ├── public/            # Static assets
+│   └── wiki/assets/   # Wiki assets (auto-copied from revival repo)
+├── scripts/           # Build and utility scripts
+│   └── sync-wiki.mjs  # Script to sync wiki from revival repo
 ├── src/
 │   ├── lib/           # Utilities, i18n, content sources
 │   └── routes/        # TanStack Router file-based routes
@@ -44,16 +47,30 @@ teras/
 └── AGENTS.md          # AI assistant instructions
 ```
 
+## Wiki Content
+
+The wiki content is **automatically generated** from the [BlankOn revival repository](https://github.com/blankon/revival).
+
+- Content is cloned from `https://github.com/blankon/revival`
+- Markdown files (`.md`) are converted to MDX (`.mdx`) with frontmatter
+- Assets are copied to `public/wiki/assets/`
+- The `sync-wiki` script runs automatically before each build (`prebuild` hook)
+
+To manually sync wiki content:
+```bash
+npm run sync-wiki
+```
+
 ## Internationalization
 
-- **Default**: Indonesian (`id`)
-- **Supported**: Indonesian, English (`en`)
-- **URL structure**: `/{lang}/path` (e.g., `/id/docs`, `/en/docs`)
+- **Default**: English (`en`)
+- **Supported**: English, Indonesian (`id`)
+- **URL structure**: `/{lang}/path` (e.g., `/en/wiki`, `/id/wiki`)
 
 Content files use suffix convention:
 
-- `index.mdx` — Indonesian (default)
-- `index.en.mdx` — English
+- `index.mdx` — English (default)
+- `index.id.mdx` — Indonesian
 
 ## Contributing
 

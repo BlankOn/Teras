@@ -40,7 +40,7 @@ function Home() {
               {t.homepage.downloadIso}
             </a>
             <a
-              href={`/${lang}/docs`}
+              href={`/${lang}/wiki`}
               className="inline-flex h-10 items-center justify-center rounded-md border border-fd-border bg-fd-background px-6 text-sm font-medium transition-colors hover:bg-fd-accent hover:text-fd-accent-foreground"
             >
               {t.homepage.readDocs}
