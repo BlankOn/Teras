@@ -1,4 +1,4 @@
-import { createFileRoute, notFound, useLocation } from '@tanstack/react-router'
+import { createFileRoute, notFound } from '@tanstack/react-router'
 import { DocsLayout } from 'fumadocs-ui/layouts/docs'
 import { createServerFn } from '@tanstack/react-start'
 import browserCollections from 'fumadocs-mdx:collections/browser'
@@ -10,10 +10,27 @@ import {
 } from 'fumadocs-ui/layouts/docs/page'
 import defaultMdxComponents from 'fumadocs-ui/mdx'
 import { useFumadocsLoader } from 'fumadocs-core/source/client'
-import { baseOptions, getTranslations } from '@/lib/layout.shared'
-import { FeedbackFromContext, FeedbackProvider } from '@/components/feedback'
+import { baseOptions } from '@/lib/layout.shared'
 import { wikiSource } from '@/lib/source'
 import { Mermaid } from '@/components/mdx/mermaid'
+import type { PageTree } from 'fumadocs-core/server'
+
+function transformNodes(nodes: PageTree.Node[]): PageTree.Node[] {
+  return nodes.flatMap((node) => {
+    if (node.type === 'folder') {
+      const children = transformNodes(node.children)
+      if (children.length === 0) {
+        return node.index ? [{ ...node.index }] : []
+      }
+      return [{ ...node, children }]
+    }
+    return [node]
+  })
+}
+
+function collapseEmptyFolders(tree: PageTree.Root): PageTree.Root {
+  return { ...tree, children: transformNodes(tree.children) }
+}
 
 export const Route = createFileRoute('/$lang/wiki/$')({
   component: Page,
@@ -45,9 +62,23 @@ const serverLoader = createServerFn({
 
 const clientLoader = browserCollections.wiki.createClientLoader({
   component({ toc, frontmatter, default: MDX }) {
+    const editPath = frontmatter.editPath
+
     return (
       <DocsPage toc={toc}>
-        <DocsTitle>{frontmatter.title}</DocsTitle>
+        <div className="flex items-start justify-between gap-4">
+          <DocsTitle>{frontmatter.title}</DocsTitle>
+          {editPath && (
+            <a
+              href={`https://github.com/BlankOn/revival/edit/main/${editPath}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-1 shrink-0 rounded-md border border-fd-border px-2.5 py-1 text-xs text-fd-muted-foreground transition-colors hover:bg-fd-accent hover:text-fd-accent-foreground"
+            >
+              Edit
+            </a>
+          )}
+        </div>
         <DocsDescription>{frontmatter.description}</DocsDescription>
         <DocsBody>
           <MDX
@@ -57,7 +88,6 @@ const clientLoader = browserCollections.wiki.createClientLoader({
             }}
           />
         </DocsBody>
-        <FeedbackFromContext />
       </DocsPage>
     )
   },
@@ -68,14 +98,10 @@ function Page() {
   const data = Route.useLoaderData()
   const { pageTree } = useFumadocsLoader(data)
   const Content = clientLoader.getComponent(data.path)
-  const location = useLocation()
-  const t = getTranslations(lang)
 
   return (
-    <FeedbackProvider url={location.pathname} translations={t.feedback}>
-      <DocsLayout {...baseOptions(lang)} tree={pageTree}>
-        <Content />
-      </DocsLayout>
-    </FeedbackProvider>
+    <DocsLayout {...baseOptions(lang)} tree={collapseEmptyFolders(pageTree)}>
+      <Content />
+    </DocsLayout>
   )
 }

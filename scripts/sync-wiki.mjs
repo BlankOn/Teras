@@ -85,20 +85,14 @@ function escapeMdxContent(content) {
     // Get text before this code block
     let textBefore = content.slice(lastEnd, block.start)
 
-    // Wrap email addresses in backticks (inline code) to prevent MDX parsing
-    // Match email patterns with or without angle brackets: <local@domain.tld> or local@domain.tld
-    textBefore = textBefore.replace(/<([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})>/g, (match, email) => {
-      // Wrap the whole thing including angle brackets in backticks with escaped @
-      return `\`<${email.replace('@', '\\@')}>\``
-    })
-    // Match standalone emails without angle brackets
-    textBefore = textBefore.replace(/\b([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})\b(?![`>])/g, (match) => {
-      return `\`${match.replace('@', '\\@')}\``
+    // Escape <email@domain> angle-bracket form to prevent MDX treating it as JSX
+    textBefore = textBefore.replace(/<([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})>/g, (_, email) => {
+      return `&lt;${email}&gt;`
     })
 
     // Escape standalone @ symbols (Twitter handles, etc) with backslash
-    // Match @username patterns that are NOT already in code blocks
-    textBefore = textBefore.replace(/(?<!`)@([a-zA-Z0-9_-]+)(?!`)/g, '\\@$1')
+    // but not when they're part of an email address
+    textBefore = textBefore.replace(/(?<![a-zA-Z0-9._%+-])@([a-zA-Z0-9_-]+)/g, '\\@$1')
 
     result += textBefore + block.content
     lastEnd = block.end
@@ -106,13 +100,10 @@ function escapeMdxContent(content) {
 
   // Add remaining text after last code block
   let remainingText = content.slice(lastEnd)
-  remainingText = remainingText.replace(/<([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})>/g, (match, email) => {
-    return `\`<${email.replace('@', '\\@')}>\``
+  remainingText = remainingText.replace(/<([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})>/g, (_, email) => {
+    return `&lt;${email}&gt;`
   })
-  remainingText = remainingText.replace(/\b([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})\b(?![`>])/g, (match) => {
-    return `\`${match.replace('@', '\\@')}\``
-  })
-  remainingText = remainingText.replace(/(?<!`)@([a-zA-Z0-9_-]+)(?!`)/g, '\\@$1')
+  remainingText = remainingText.replace(/(?<![a-zA-Z0-9._%+-])@([a-zA-Z0-9_-]+)/g, '\\@$1')
   result += remainingText
 
   return result
@@ -121,23 +112,24 @@ function escapeMdxContent(content) {
 /**
  * Convert markdown to MDX with frontmatter
  */
-function convertToMdx(content, filename) {
+function convertToMdx(content, filename, editPath) {
   const title = extractTitle(content, filename)
 
   // Escape special MDX characters
   let processedContent = escapeMdxContent(content)
 
-  // Add frontmatter if not present
-  if (!processedContent.startsWith('---')) {
-    const frontmatter = `---
+  if (processedContent.startsWith('---')) {
+    // Inject editPath into existing frontmatter
+    return processedContent.replace(/^---\n/, `---\neditPath: ${editPath}\n`)
+  }
+
+  const frontmatter = `---
 title: ${title}
+editPath: ${editPath}
 ---
 
 `
-    return frontmatter + processedContent
-  }
-
-  return processedContent
+  return frontmatter + processedContent
 }
 
 /**
@@ -153,7 +145,7 @@ function getSlug(filePath) {
 /**
  * Process directory recursively
  */
-async function processDirectory(sourceDir, targetDir, basePath = '') {
+async function processDirectory(sourceDir, targetDir, basePath = '', originalBasePath = '') {
   const entries = await fs.readdir(sourceDir, { withFileTypes: true })
 
   for (const entry of entries) {
@@ -169,11 +161,12 @@ async function processDirectory(sourceDir, targetDir, basePath = '') {
       const slug = getSlug(entry.name)
       const newTargetDir = path.join(targetDir, slug)
       await fs.mkdir(newTargetDir, { recursive: true })
-      await processDirectory(sourcePath, newTargetDir, path.join(basePath, slug))
+      await processDirectory(sourcePath, newTargetDir, path.join(basePath, slug), path.join(originalBasePath, entry.name))
     } else if (entry.isFile() && entry.name.endsWith('.md')) {
       // Convert markdown file to MDX
+      const originalRelPath = path.join(originalBasePath, entry.name).replace(/\\/g, '/')
       const content = await fs.readFile(sourcePath, 'utf-8')
-      const mdxContent = convertToMdx(content, entry.name)
+      const mdxContent = convertToMdx(content, entry.name, originalRelPath)
 
       // Determine target filename
       let targetFilename
