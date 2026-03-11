@@ -15,80 +15,22 @@ function Home() {
     <HomeLayout {...baseOptions(lang)}>
       <main className="flex flex-1 flex-col">
         {/* Hero Section */}
-        <section className="flex flex-col items-center justify-center px-4 py-24 text-center">
+        <section className="flex flex-col items-center justify-center px-4 pb-8 pt-24 text-center">
           <img
-            src="/logo-black.png"
-            alt="BlankOn"
-            className="mb-8 h-16 w-auto dark:hidden"
+            src="/blankon-revival-project.png"
+            alt="BlankOn Revival Project"
+            className="mb-8 h-56 w-auto"
           />
-          <img
-            src="/logo-white.png"
-            alt="BlankOn"
-            className="mb-8 hidden h-12 w-auto dark:block"
-          />
-          <h1 className="text-4xl font-bold tracking-tight md:text-5xl">
-            {t.homepage.heroTitle}
-          </h1>
           <p className="mt-4 max-w-2xl text-lg text-fd-muted-foreground">
             {t.homepage.heroTagline}
           </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <a
-              href={`/${lang}/download`}
-              className="inline-flex h-10 items-center justify-center rounded-md bg-fd-primary px-6 text-sm font-medium text-fd-primary-foreground transition-colors hover:bg-fd-primary/90"
-            >
-              {t.homepage.downloadIso}
-            </a>
-            <a
-              href={`/${lang}/docs`}
-              className="inline-flex h-10 items-center justify-center rounded-md border border-fd-border bg-fd-background px-6 text-sm font-medium transition-colors hover:bg-fd-accent hover:text-fd-accent-foreground"
-            >
-              {t.homepage.readDocs}
-            </a>
-          </div>
         </section>
 
         {/* About Section */}
-        <section className="mx-auto max-w-3xl px-4 py-16">
-          <h2 className="mb-6 text-center text-2xl font-semibold">
-            {t.homepage.aboutTitle}
-          </h2>
+        <section className="mx-auto max-w-3xl px-4 pb-16 pt-0">
           <p className="text-center text-fd-muted-foreground">
             {t.homepage.aboutDescription}
           </p>
-        </section>
-
-        {/* Sponsors Section */}
-        <section className="px-4 py-16">
-          <h2 className="mb-8 text-center text-2xl font-semibold">
-            {t.homepage.sponsorsTitle}
-          </h2>
-          <div className="flex flex-wrap items-center justify-center gap-12">
-            <a
-              href="https://nurulfikri.ac.id/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="transition-opacity hover:opacity-80"
-            >
-              <img
-                src="/logo-sttnf.png"
-                alt="STT Terpadu Nurul Fikri"
-                className="h-16 w-auto"
-              />
-            </a>
-            <a
-              href="https://www.hostbadak.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="transition-opacity hover:opacity-80"
-            >
-              <img
-                src="/logo-hostbadak.png"
-                alt="HostBadak"
-                className="h-16 w-auto"
-              />
-            </a>
-          </div>
         </section>
 
         {/* FAQ Section */}
@@ -97,32 +39,50 @@ function Home() {
             {t.homepage.faqTitle}
           </h2>
           <div className="space-y-2">
-            <FAQItem question={t.homepage.faq.q1} answer={t.homepage.faq.a1} />
             <FAQItem question={t.homepage.faq.q2} answer={t.homepage.faq.a2} />
             <FAQItem question={t.homepage.faq.q3} answer={t.homepage.faq.a3} />
             <FAQItem question={t.homepage.faq.q4} answer={t.homepage.faq.a4} />
+            <FAQItem question={t.homepage.faq.q5} answer={t.homepage.faq.a5} />
+            <FAQItem question={t.homepage.faq.q6} answer={t.homepage.faq.a6} />
+            <FAQItem question={t.homepage.faq.q7} answer={t.homepage.faq.a7} />
+            <FAQItem question={t.homepage.faq.q8} answer={t.homepage.faq.a8} />
+            <FAQItem question={t.homepage.faq.q9} answer={t.homepage.faq.a9} />
           </div>
         </section>
 
-        {/* Get Involved Section */}
-        <section className="px-4 py-16">
-          <div className="mx-auto max-w-3xl text-center">
-            <h2 className="mb-4 text-2xl font-semibold">
-              {t.homepage.getInvolvedTitle}
-            </h2>
-            <p className="mb-8 text-fd-muted-foreground">
-              {t.homepage.getInvolvedDescription}
-            </p>
-            <a
-              href="https://t.me/BlankOnLinux"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-10 items-center justify-center rounded-md bg-fd-primary px-6 text-sm font-medium text-fd-primary-foreground transition-colors hover:bg-fd-primary/90"
-            >
-              {t.homepage.joinTelegram}
-            </a>
-          </div>
+        {/* Updates Section */}
+        <section className="mx-auto max-w-3xl px-4 py-16">
+          <h2 className="mb-8 text-center text-2xl font-semibold">
+            {t.homepage.updatesTitle}
+          </h2>
+          <ol className="relative border-s border-fd-border">
+            {t.homepage.updates.map((item) => (
+              <li key={item.date} className="mb-8 ms-4">
+                <div className="absolute -start-1.5 mt-1.5 h-3 w-3 rounded-full border border-fd-background bg-fd-muted-foreground" />
+                <time className="mb-1 text-sm font-normal text-fd-muted-foreground">
+                  {item.date}
+                </time>
+                <p className="mt-1 text-base text-fd-foreground">
+                  {item.text}
+                  {item.url && (
+                    <>
+                      {' '}
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-fd-primary underline underline-offset-4 hover:opacity-80"
+                      >
+                        {item.url}
+                      </a>
+                    </>
+                  )}
+                </p>
+              </li>
+            ))}
+          </ol>
         </section>
+
       </main>
     </HomeLayout>
   )
@@ -152,7 +112,7 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
           isOpen ? 'max-h-96' : 'max-h-0',
         )}
       >
-        <p className="px-4 pb-4 text-fd-muted-foreground">{answer}</p>
+        <p className="px-4 pb-4 pt-3 text-fd-muted-foreground">{answer}</p>
       </div>
     </div>
   )

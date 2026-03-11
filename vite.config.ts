@@ -7,9 +7,11 @@ import tailwindcss from '@tailwindcss/vite'
 import { cloudflare } from '@cloudflare/vite-plugin'
 import mdx from 'fumadocs-mdx/vite'
 import * as MdxConfig from './source.config'
+import { checksumPlugin } from './src/plugins/checksum'
 
 const config = defineConfig({
   plugins: [
+    checksumPlugin(),
     mdx(MdxConfig),
     devtools(),
     cloudflare({ viteEnvironment: { name: 'ssr' } }),

@@ -4,6 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev --port 3000",
+    "sync-wiki": "node scripts/sync-wiki.mjs",
+    "prebuild": "npm run sync-wiki",
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",

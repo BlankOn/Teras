@@ -1,15 +1,22 @@
-FROM node:20-bookworm-slim
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-COPY package*.json ./
-
-RUN npm install
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 
 COPY . .
+RUN yarn build
 
-RUN npm run build
+FROM node:22-alpine
+
+WORKDIR /app
+
+RUN npm install -g wrangler
+
+COPY --from=builder /app/.output ./.output
+COPY --from=builder /app/package.json ./
 
 EXPOSE 3000
 
-CMD ["npm","run","preview","--","--host","0.0.0.0","--port","3000"]
+CMD ["wrangler", "pages", "dev", ".output/public", "--port", "3000"]
