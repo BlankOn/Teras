@@ -34,7 +34,7 @@ FROM nginx:alpine
 COPY --from=builder /app/dist/client /usr/share/nginx/html
 
 # Create nginx config for SPA (redirect all routes to index.html)
-RUN echo 'server {\n\
+RUN printf 'server {\n\
     listen 80;\n\
     server_name _;\n\
     root /usr/share/nginx/html;\n\
@@ -49,8 +49,7 @@ RUN echo 'server {\n\
         expires 1y;\n\
         add_header Cache-Control "public, immutable";\n\
     }\n\
-}\n\
-' > /etc/nginx/conf.d/default.conf
+}\n' > /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
