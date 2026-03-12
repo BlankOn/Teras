@@ -9,6 +9,8 @@ export const Route = createFileRoute('/$lang/download')({ component: Download })
 const ISO_URL =
   'http://jahitan.blankonlinux.id/harian/current/blankon-live-image-amd64.hybrid.iso'
 const ISO_FILENAME = 'blankon-live-image-amd64.hybrid.iso'
+const SHA256SUM_URL =
+  'http://jahitan.blankonlinux.id/harian/current/blankon-live-image-amd64.hybrid.iso.sha256sum'
 
 function ScreenshotLightbox() {
   const [open, setOpen] = useState(false)
@@ -108,10 +110,21 @@ function Download() {
               <dt className="text-fd-muted-foreground">{d.releaseType}</dt>
               <dd>{d.releaseTypeValue}</dd>
             </div>
-            <div className="flex justify-between gap-4 px-4 py-2.5">
+            <div className="flex items-center justify-between gap-4 px-4 py-2.5">
               <dt className="shrink-0 text-fd-muted-foreground">{d.checksum}</dt>
-              <dd className="truncate font-mono text-xs">
-                {checksum || d.checksumError}
+              <dd className="flex min-w-0 items-center gap-2">
+                <span className="truncate font-mono text-xs">
+                  {checksum || d.checksumError}
+                </span>
+                <a
+                  href={SHA256SUM_URL}
+                  className="shrink-0 rounded border border-fd-border px-2 py-0.5 text-xs text-fd-muted-foreground transition-colors hover:bg-fd-accent hover:text-fd-accent-foreground"
+                  download
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 4v11" />
+                  </svg>
+                </a>
               </dd>
             </div>
           </dl>

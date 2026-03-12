@@ -44,10 +44,14 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'BlankOn',
+        title: 'BlankOn Linux',
       },
     ],
     links: [
+      {
+        rel: 'icon',
+        href: '/favicon.ico',
+      },
       {
         rel: 'stylesheet',
         href: appCss,

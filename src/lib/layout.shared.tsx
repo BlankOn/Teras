@@ -59,8 +59,10 @@ const translations = {
     },
     homepage: {
       heroTitle: 'BlankOn Revival Project',
-      heroTagline:
-        'Sebuah usaha untuk membangkitkan kembali proyek BlankOn yang sudah lama mati suri dari kedalaman /dev/null',
+      heroTagline: [
+        'Sebuah usaha untuk membangkitkan kembali proyek BlankOn yang sudah lama mati suri',
+        'dari kedalaman /dev/null',
+      ],
       downloadIso: 'Unduh ISO',
       readDocs: 'Dokumentasi',
       aboutTitle: 'Tentang',
@@ -87,14 +89,16 @@ const translations = {
         q8: 'Apa tolok ukur keberhasilan kebangkitan ini?',
         a8: 'Anda dapat mengunduh dan menginstal image Linux BlankOn baru yang lengkap, dibangun dan dikirim langsung dari IRGSH. Jika Anda dapat mem-boot, menjalankan, dan mengembangkannya, itulah milestone kebangkitan kami.',
         q9: 'Apa kemajuan saat ini?',
-        a9: 'Silakan lihat bagian Log di bawah ini.',
+        a9: 'Silakan lihat bagian Perkembangan di bawah ini.',
+        q10: 'Kapan versi stabil akan dirilis?',
+        a10: 'Sebelum akhir tahun 2026. Mungkin lebih cepat jika Anda membantu kami dengan berkontribusi.',
       },
       updatesTitle: 'Perkembangan',
       updates: [
         {
           date: '2026-02-07',
           text: 'Yayasan BlankOn telah resmi berdiri secara hukum. Dewan pengurus terdiri dari Rusmanto, Akhmat Safrudin, Slamet Santoso, Iwan Setiawan, dan Herpiko Dwi Aguno. Yayasan BlankOn adalah badan hukum terpisah yang dibentuk untuk mendukung ekosistem open-source yang lebih luas, komunitas, dan proyek-proyek di Indonesia. Sementara itu, BlankOn Linux akan tetap berjalan sebagai proyek open-source yang independen, dengan Yayasan memberikan dukungan finansial dan hukum penuh.',
-          url: 'https://x.com/herpiko/status/2020077066025332817',
+          url: 'https://blankon.id/en/team',
         },
         {
           date: '2026-01-25',
@@ -195,8 +199,10 @@ const translations = {
     },
     homepage: {
       heroTitle: 'BlankOn Revival Project',
-      heroTagline:
-        'An attempt to bring back the long-dormant BlankOn project from the depths of /dev/null',
+      heroTagline: [
+        'An attempt to bring back the long-dormant BlankOn project',
+        'from the depths of /dev/null',
+      ],
       downloadIso: 'Download ISO',
       readDocs: 'Documentation',
       aboutTitle: 'About',
@@ -223,14 +229,16 @@ const translations = {
         q8: 'What is the success metric of the revival?',
         a8: 'You can download and install a fully-fledged, brand-new BlankOn Linux image, built, baked, and shipped directly from IRGSH. If you can boot it, run it, and hack on it, that is our revival milestone.',
         q9: 'What is the current progress?',
-        a9: 'Please check out the Logs section below.',
+        a9: 'Please check out the Updates section below.',
+        q10: 'When will the stable version be released?',
+        a10: 'Before the end of 2026. Maybe sooner if you help us by contributing.',
       },
       updatesTitle: 'Updates',
       updates: [
         {
           date: '2026-02-07',
           text: 'The BlankOn Foundation has been legally established. The board members are Rusmanto, Akhmat Safrudin, Slamet Santoso, Iwan Setiawan, and Herpiko Dwi Aguno. The BlankOn Foundation is a separate legal entity established to support the broader open-source ecosystem, communities, and projects in Indonesia. Meanwhile, BlankOn Linux will continue as an independent open-source project, with the Foundation providing full financial and legal support.',
-          url: 'https://x.com/herpiko/status/2020077066025332817',
+          url: 'https://blankon.id/en/team',
         },
         {
           date: '2026-01-25',
@@ -305,6 +313,7 @@ export function baseOptions(locale: string): BaseLayoutProps {
 
   return {
     i18n,
+    enableSearch: false,
     nav: {
       title: <Logo />,
       url: `/${locale}`,

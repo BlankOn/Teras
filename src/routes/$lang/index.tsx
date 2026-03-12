@@ -22,7 +22,14 @@ function Home() {
             className="mb-8 h-56 w-auto"
           />
           <p className="mt-4 max-w-2xl text-lg text-fd-muted-foreground">
-            {t.homepage.heroTagline}
+            {Array.isArray(t.homepage.heroTagline)
+              ? t.homepage.heroTagline.map((line, i) => (
+                  <span key={i}>
+                    {line}
+                    {i < t.homepage.heroTagline.length - 1 && <br />}
+                  </span>
+                ))
+              : t.homepage.heroTagline}
           </p>
         </section>
 
@@ -47,6 +54,7 @@ function Home() {
             <FAQItem question={t.homepage.faq.q7} answer={t.homepage.faq.a7} />
             <FAQItem question={t.homepage.faq.q8} answer={t.homepage.faq.a8} />
             <FAQItem question={t.homepage.faq.q9} answer={t.homepage.faq.a9} />
+            <FAQItem question={t.homepage.faq.q10} answer={t.homepage.faq.a10} />
           </div>
         </section>
 
