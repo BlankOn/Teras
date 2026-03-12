@@ -21,7 +21,7 @@ const config = defineConfig({
     }),
     tailwindcss(),
     tanstackStart({
-      preset: 'node-server',
+      preset: 'static',
     }),
     viteReact(),
   ],
