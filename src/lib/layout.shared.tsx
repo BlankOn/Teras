@@ -338,7 +338,7 @@ export function baseOptions(locale: string, enableSearch = false): BaseLayoutPro
       },
       {
         text: t.wiki,
-        url: `/${locale}/wiki`,
+        url: `/${locale}/wiki/`,
         active: 'nested-url',
       },
       {
