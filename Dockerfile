@@ -17,9 +17,12 @@ WORKDIR /app
 
 RUN npm install -g wrangler
 
-COPY --from=builder /app/.output ./.output
+COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package.json ./
+COPY --from=builder /app/wrangler.jsonc ./
 
 EXPOSE 3000
 
-CMD ["wrangler", "pages", "dev", ".output/public", "--port", "3000"]
+WORKDIR /app/dist/server
+
+CMD ["wrangler", "dev", "--port", "3000", "--ip", "0.0.0.0"]
