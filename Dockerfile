@@ -12,7 +12,7 @@ COPY . .
 RUN yarn build
 
 # Create index.html for the SPA
-RUN echo '<!DOCTYPE html>\n\
+RUN printf '<!DOCTYPE html>\n\
 <html lang="en">\n\
 <head>\n\
   <meta charset="UTF-8">\n\
@@ -26,7 +26,7 @@ RUN echo '<!DOCTYPE html>\n\
   <div id="root"></div>\n\
   <script type="module" src="/assets/main-_xEiGKjZ.js"></script>\n\
 </body>\n\
-</html>' > /app/dist/client/index.html
+</html>\n' > /app/dist/client/index.html
 
 FROM nginx:alpine
 
