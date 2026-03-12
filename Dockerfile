@@ -11,23 +11,6 @@ RUN yarn install --frozen-lockfile
 COPY . .
 RUN yarn build
 
-# Create index.html for the SPA
-RUN printf '<!DOCTYPE html>\n\
-<html lang="en">\n\
-<head>\n\
-  <meta charset="UTF-8">\n\
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n\
-  <title>Teras - BlankOn</title>\n\
-  <link rel="icon" href="/favicon.ico">\n\
-  <link rel="manifest" href="/manifest.json">\n\
-  <meta name="description" content="Teras - BlankOn Website">\n\
-</head>\n\
-<body>\n\
-  <div id="root"></div>\n\
-  <script type="module" src="/assets/main-_xEiGKjZ.js"></script>\n\
-</body>\n\
-</html>\n' > /app/dist/client/index.html
-
 FROM nginx:alpine
 
 # Copy static files from builder

@@ -22,6 +22,10 @@ const config = defineConfig({
     tailwindcss(),
     tanstackStart({
       preset: 'static',
+      prerender: {
+        enabled: true,
+        autoSubfolderIndex: true,
+      },
     }),
     viteReact(),
   ],
