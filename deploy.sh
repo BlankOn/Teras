@@ -20,7 +20,7 @@ IMAGE_NAME="ghcr.io/blankon/teras-website"
 TAG=$(date +"%Y%m%d-%H%M")
 
 echo "Step 2/4: Building Docker image: ${IMAGE_NAME}:${TAG}..."
-docker build -t "${IMAGE_NAME}:${TAG}" -t "${IMAGE_NAME}:latest" .
+docker build --no-cache -t "${IMAGE_NAME}:${TAG}" -t "${IMAGE_NAME}:latest" .
 echo "✓ Docker image built successfully"
 echo ""
 

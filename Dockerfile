@@ -16,15 +16,23 @@ FROM nginx:alpine
 # Copy static files from builder
 COPY --from=builder /app/dist/client /usr/share/nginx/html
 
-# Create nginx config for SPA (redirect all routes to index.html)
+# Create nginx config for static site with subdirectories
 RUN printf 'server {\n\
     listen 80;\n\
     server_name _;\n\
     root /usr/share/nginx/html;\n\
     index index.html;\n\
 \n\
+    # Redirect URLs without trailing slash to with trailing slash for directories\n\
+    location ~ ^([^.]*[^/])$ {\n\
+        if (-d $document_root$uri) {\n\
+            return 301 $scheme://$host$uri/;\n\
+        }\n\
+        try_files $uri $uri.html $uri/ =404;\n\
+    }\n\
+\n\
     location / {\n\
-        try_files $uri $uri/ /index.html;\n\
+        try_files $uri $uri.html $uri/index.html =404;\n\
     }\n\
 \n\
     # Cache static assets\n\
