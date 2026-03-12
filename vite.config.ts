@@ -4,7 +4,7 @@ import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 import viteReact from '@vitejs/plugin-react'
 import viteTsConfigPaths from 'vite-tsconfig-paths'
 import tailwindcss from '@tailwindcss/vite'
-import { cloudflare } from '@cloudflare/vite-plugin'
+// import { cloudflare } from '@cloudflare/vite-plugin'
 import mdx from 'fumadocs-mdx/vite'
 import * as MdxConfig from './source.config'
 import { checksumPlugin } from './src/plugins/checksum'
@@ -14,13 +14,15 @@ const config = defineConfig({
     checksumPlugin(),
     mdx(MdxConfig),
     devtools(),
-    cloudflare({ viteEnvironment: { name: 'ssr' } }),
+    // cloudflare({ viteEnvironment: { name: 'ssr' } }),
     // this is the plugin that enables path aliases
     viteTsConfigPaths({
       projects: ['./tsconfig.json'],
     }),
     tailwindcss(),
-    tanstackStart(),
+    tanstackStart({
+      preset: 'node-server',
+    }),
     viteReact(),
   ],
 })
