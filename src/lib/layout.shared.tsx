@@ -60,8 +60,8 @@ const translations = {
     homepage: {
       heroTitle: 'BlankOn Revival Project',
       heroTagline: [
-        'Sebuah usaha untuk membangkitkan kembali proyek BlankOn yang sudah lama mati suri',
-        'dari kedalaman /dev/null',
+        'Sebuah usaha untuk membangkitkan kembali proyek BlankOn',
+        'yang sudah lama mati suri dari kedalaman /dev/null',
       ],
       downloadIso: 'Unduh ISO',
       readDocs: 'Dokumentasi',
@@ -308,12 +308,14 @@ export function getTranslations(locale: string) {
   return translations.id
 }
 
-export function baseOptions(locale: string): BaseLayoutProps {
+export function baseOptions(locale: string, enableSearch = false): BaseLayoutProps {
   const t = getTranslations(locale)
 
   return {
     i18n,
-    enableSearch: false,
+    searchToggle: {
+      enabled: enableSearch,
+    },
     nav: {
       title: <Logo />,
       url: `/${locale}`,

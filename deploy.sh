@@ -19,9 +19,8 @@ echo ""
 IMAGE_NAME="ghcr.io/blankon/teras-website"
 TAG=$(date +"%Y%m%d-%H%M")
 
-echo "Step 2/3: Building Docker image: ${IMAGE_NAME}:${TAG}..."
-docker build -t "${IMAGE_NAME}:${TAG}" .
-docker tag "${IMAGE_NAME}:${TAG}" "${IMAGE_NAME}:latest"
+echo "Step 2/4: Building Docker image: ${IMAGE_NAME}:${TAG}..."
+docker build -t "${IMAGE_NAME}:${TAG}" -t "${IMAGE_NAME}:latest" .
 echo "✓ Docker image built successfully"
 echo ""
 
@@ -40,7 +39,6 @@ echo ""
 # Step 4: Deploy with docker-compose
 echo "Step 4/4: Deploying with docker-compose..."
 cd ~/
-docker compose pull || true
 docker compose up -d
 echo "✓ Deployment complete"
 echo ""

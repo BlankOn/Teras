@@ -100,7 +100,7 @@ function Page() {
   const Content = clientLoader.getComponent(data.path)
 
   return (
-    <DocsLayout {...baseOptions(lang)} tree={collapseEmptyFolders(pageTree)}>
+    <DocsLayout {...baseOptions(lang, true)} tree={collapseEmptyFolders(pageTree)}>
       <Content />
     </DocsLayout>
   )

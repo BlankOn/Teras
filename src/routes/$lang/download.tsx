@@ -113,17 +113,15 @@ function Download() {
             <div className="flex items-center justify-between gap-4 px-4 py-2.5">
               <dt className="shrink-0 text-fd-muted-foreground">{d.checksum}</dt>
               <dd className="flex min-w-0 items-center gap-2">
-                <span className="truncate font-mono text-xs">
-                  {checksum || d.checksumError}
-                </span>
                 <a
                   href={SHA256SUM_URL}
-                  className="shrink-0 rounded border border-fd-border px-2 py-0.5 text-xs text-fd-muted-foreground transition-colors hover:bg-fd-accent hover:text-fd-accent-foreground"
+                  className="shrink-0 rounded border border-fd-border px-2 py-0.5 text-xs text-fd-muted-foreground transition-colors hover:bg-fd-accent hover:text-fd-accent-foreground flex items-center gap-1"
                   download
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 4v11" />
                   </svg>
+                  <span>Download</span>
                 </a>
               </dd>
             </div>

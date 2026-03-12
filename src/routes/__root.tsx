@@ -16,8 +16,6 @@ const { provider } = defineI18nUI(i18n, {
   translations: {
     id: {
       displayName: 'Indonesia',
-      search: 'Cari dokumentasi',
-      searchNoResult: 'Tidak ada hasil',
       toc: 'Daftar Isi',
       tocNoHeadings: 'Tidak ada heading',
       lastUpdate: 'Terakhir diperbarui',
