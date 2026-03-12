@@ -15,9 +15,14 @@ FROM node:22-alpine
 
 WORKDIR /app
 
+# Copy package files and install production dependencies
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/yarn.lock ./
+RUN yarn install --frozen-lockfile --production
+
+# Copy built application and server entry point
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/server-standalone.js ./
-COPY --from=builder /app/package.json ./
 
 ENV PORT=3000
 ENV HOST=0.0.0.0
