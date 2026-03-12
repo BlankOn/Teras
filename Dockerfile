@@ -15,14 +15,14 @@ FROM node:22-alpine
 
 WORKDIR /app
 
-RUN npm install -g wrangler
-
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/server-standalone.js ./
 COPY --from=builder /app/package.json ./
-COPY --from=builder /app/wrangler.jsonc ./
+
+ENV PORT=3000
+ENV HOST=0.0.0.0
+ENV NODE_ENV=production
 
 EXPOSE 3000
 
-WORKDIR /app/dist/server
-
-CMD ["wrangler", "dev", "--port", "3000", "--ip", "0.0.0.0"]
+CMD ["node", "server-standalone.js"]
