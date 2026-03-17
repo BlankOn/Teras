@@ -4,8 +4,6 @@ import {
   createRootRoute,
   useParams,
 } from '@tanstack/react-router'
-import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
-import { TanStackDevtools } from '@tanstack/react-devtools'
 import { RootProvider } from 'fumadocs-ui/provider/base'
 import { TanstackProvider } from 'fumadocs-core/framework/tanstack'
 import { defineI18nUI } from 'fumadocs-ui/i18n'
@@ -72,17 +70,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <TanstackProvider>
           <RootProvider i18n={provider(lang)}>{children}</RootProvider>
         </TanstackProvider>
-        <TanStackDevtools
-          config={{
-            position: 'bottom-right',
-          }}
-          plugins={[
-            {
-              name: 'Tanstack Router',
-              render: <TanStackRouterDevtoolsPanel />,
-            },
-          ]}
-        />
         <Scripts />
       </body>
     </html>
