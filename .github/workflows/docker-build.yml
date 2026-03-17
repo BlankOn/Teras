@@ -7,13 +7,24 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build Docker image
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
         run: |
-          IMAGE_NAME="teras"
-          TAG=$(date +"%Y%d%m-%H%M")
-          echo "Building Docker image: ${IMAGE_NAME}:${TAG}"
-          docker build -t "${IMAGE_NAME}:${TAG}" .
-          echo "Build complete: ${IMAGE_NAME}:${TAG}"
+          IMAGE="ghcr.io/blankon/teras-website"
+          TAG=$(date +"%Y%m%d-%H%M")
+          docker build -f Dockerfile.ssr -t "${IMAGE}:${TAG}" -t "${IMAGE}:latest" .
+          docker push "${IMAGE}:${TAG}"
+          docker push "${IMAGE}:latest"
