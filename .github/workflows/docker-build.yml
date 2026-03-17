@@ -1,0 +1,19 @@
+name: Build Docker Image
+
+on:
+  repository_dispatch:
+    types: [revival-updated]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: |
+          IMAGE_NAME="teras"
+          TAG=$(date +"%Y%d%m-%H%M")
+          echo "Building Docker image: ${IMAGE_NAME}:${TAG}"
+          docker build -t "${IMAGE_NAME}:${TAG}" .
+          echo "Build complete: ${IMAGE_NAME}:${TAG}"
