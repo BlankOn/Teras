@@ -115,8 +115,11 @@ function escapeMdxContent(content) {
 function convertToMdx(content, filename, editPath) {
   const title = extractTitle(content, filename)
 
+  // Remove the first # heading from the body — it will be rendered by DocsTitle via frontmatter
+  let bodyContent = content.replace(/^#\s+.+\n?/m, '')
+
   // Escape special MDX characters
-  let processedContent = escapeMdxContent(content)
+  let processedContent = escapeMdxContent(bodyContent)
 
   if (processedContent.startsWith('---')) {
     // Inject editPath into existing frontmatter
@@ -141,6 +144,9 @@ function getSlug(filePath) {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
 }
+
+// Locale codes supported by the i18n config
+const KNOWN_LOCALES = ['en', 'id']
 
 /**
  * Process directory recursively
@@ -168,20 +174,26 @@ async function processDirectory(sourceDir, targetDir, basePath = '', originalBas
       const content = await fs.readFile(sourcePath, 'utf-8')
       const mdxContent = convertToMdx(content, entry.name, originalRelPath)
 
-      // Determine target filename
-      let targetFilename
+      // Detect locale suffix: e.g. WikiGuidelines.id.md → base=wikiguidelines, locale=id
+      const localeMatch = entry.name.match(/^(.+)\.([a-z]{2})\.md$/)
+      const isLocaleFile = localeMatch && KNOWN_LOCALES.includes(localeMatch[2])
+
+      let targetPath
       if (entry.name.toLowerCase() === 'readme.md') {
-        targetFilename = 'index.mdx'
+        targetPath = path.join(targetDir, 'index.mdx')
+      } else if (isLocaleFile) {
+        // Place as index.{locale}.mdx inside the base slug directory
+        const baseSlug = getSlug(localeMatch[1])
+        const locale = localeMatch[2]
+        const subDir = path.join(targetDir, baseSlug)
+        await fs.mkdir(subDir, { recursive: true })
+        targetPath = path.join(subDir, `index.${locale}.mdx`)
       } else {
         const slug = getSlug(entry.name)
         const subDir = path.join(targetDir, slug)
         await fs.mkdir(subDir, { recursive: true })
-        targetFilename = path.join(subDir, 'index.mdx')
+        targetPath = path.join(subDir, 'index.mdx')
       }
-
-      const targetPath = entry.name.toLowerCase() === 'readme.md'
-        ? path.join(targetDir, targetFilename)
-        : targetFilename
 
       await fs.writeFile(targetPath, mdxContent, 'utf-8')
       console.log(`  ✓ ${path.relative(WIKI_DIR, targetPath)}`)
