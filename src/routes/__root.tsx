@@ -48,10 +48,6 @@ export const Route = createRootRoute({
         rel: 'icon',
         href: '/favicon.ico',
       },
-      {
-        rel: 'stylesheet',
-        href: appCss,
-      },
     ],
   }),
 
@@ -64,6 +60,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang={lang || 'id'} suppressHydrationWarning>
       <head>
+        <link rel="stylesheet" href={appCss} />
         <HeadContent />
       </head>
       <body className="flex min-h-screen flex-col">
