@@ -51,7 +51,7 @@ const server = http.createServer((req, res) => {
         'Content-Length': stat.size,
         'Cache-Control': isImmutable
           ? 'public, max-age=31536000, immutable'
-          : 'public, max-age=3600',
+          : 'no-cache, must-revalidate',
       })
       fs.createReadStream(filePath).pipe(res)
     } else {
