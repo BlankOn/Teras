@@ -8,7 +8,9 @@ COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
 COPY . .
-RUN yarn sync-wiki && npx vite build --config vite.config.ssr.ts
+RUN yarn sync-wiki
+RUN npx vite build --outDir dist --ssrManifest
+RUN npx vite build --outDir dist --ssr --config vite.config.ssr.ts
 
 # Separate stage to get production-only node_modules
 FROM node:22-alpine AS prod-deps
