@@ -25,6 +25,6 @@ jobs:
         run: |
           IMAGE="ghcr.io/blankon/teras-website"
           TAG=$(date +"%Y%m%d-%H%M")
-          docker build --no-cache -f Dockerfile.ssr -t "${IMAGE}:${TAG}" -t "${IMAGE}:latest" .
+          docker build --no-cache -t "${IMAGE}:${TAG}" -t "${IMAGE}:latest" .
           docker push "${IMAGE}:${TAG}"
           docker push "${IMAGE}:latest"

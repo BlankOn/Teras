@@ -2,46 +2,34 @@ FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-# Install git for sync-wiki script
 RUN apk add --no-cache git
 
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
 COPY . .
-RUN yarn build
+RUN yarn sync-wiki
+RUN npx vite build --outDir dist --ssrManifest
+RUN npx vite build --outDir dist --ssr --config vite.config.ssr.ts
 
-FROM nginx:alpine
+# Separate stage to get production-only node_modules
+FROM node:22-alpine AS prod-deps
 
-# Copy static files from builder
-COPY --from=builder /app/dist/client /usr/share/nginx/html
+WORKDIR /app
 
-# Create nginx config for static site with subdirectories
-RUN printf 'server {\n\
-    listen 80;\n\
-    server_name _;\n\
-    root /usr/share/nginx/html;\n\
-    index index.html;\n\
-\n\
-    # Redirect URLs without trailing slash to with trailing slash for directories\n\
-    location ~ ^([^.]*[^/])$ {\n\
-        if (-d $document_root$uri) {\n\
-            return 301 $scheme://$host$uri/;\n\
-        }\n\
-        try_files $uri $uri.html $uri/ =404;\n\
-    }\n\
-\n\
-    location / {\n\
-        try_files $uri $uri.html $uri/index.html =404;\n\
-    }\n\
-\n\
-    # Cache static assets\n\
-    location ~* \.(?:css|js|jpg|jpeg|gif|png|ico|svg|woff|woff2|ttf|eot)$ {\n\
-        expires 1y;\n\
-        add_header Cache-Control "public, immutable";\n\
-    }\n\
-}\n' > /etc/nginx/conf.d/default.conf
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile --production
 
+# Runtime: Node.js + prod deps + built output
+FROM node:22-alpine
+
+WORKDIR /app
+
+COPY --from=prod-deps /app/node_modules /app/node_modules
+COPY --from=builder /app/dist /app/dist
+COPY server.mjs ./
+
+ENV PORT=80
 EXPOSE 80
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["node", "server.mjs"]
