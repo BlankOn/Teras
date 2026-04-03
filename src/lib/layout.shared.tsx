@@ -1,6 +1,56 @@
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared'
 import { i18n } from '@/lib/i18n'
 
+const externalDevLinks = [
+  { text: 'IRGSH', url: 'http://irgsh.blankonlinux.id/' },
+  { text: 'Security', url: 'https://security.blankonlinux.id/' },
+  { text: 'Packages', url: 'https://packages.blankonlinux.id/' },
+  { text: 'Jahitan', url: 'http://jahitan.blankonlinux.id/' },
+  { text: 'Arsip', url: 'https://arsip.blankonlinux.id/' },
+  { text: 'Arsip Dev', url: 'http://arsip-dev.blankonlinux.id/' },
+  { text: 'Github', url: 'https://github.com/blankon' },
+]
+
+function DevMenu({ locale }: { locale: string }) {
+  const links = [
+    { text: 'Team', url: `/${locale}/team`, external: false },
+    ...externalDevLinks.map((l) => ({ ...l, external: true })),
+  ]
+
+  return (
+    <div className="group relative">
+      <button
+        type="button"
+        className="inline-flex items-center gap-1 p-2 text-fd-muted-foreground transition-colors hover:text-fd-accent-foreground [&_svg]:size-4"
+      >
+        Development
+        <svg
+          className="h-3 w-3 transition-transform group-hover:rotate-180"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <path d="M6 9l6 6 6-6" />
+        </svg>
+      </button>
+      <ul className="invisible absolute right-0 top-full z-50 mt-1 min-w-[160px] rounded-md border border-fd-border bg-fd-background py-1 opacity-0 shadow-md transition-all group-hover:visible group-hover:opacity-100">
+        {links.map((link) => (
+          <li key={link.url}>
+            <a
+              href={link.url}
+              {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+              className="block px-4 py-2 text-sm text-fd-muted-foreground hover:bg-fd-accent hover:text-fd-accent-foreground"
+            >
+              {link.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
 function Logo() {
   return (
     <>
@@ -327,11 +377,6 @@ export function baseOptions(locale: string, enableSearch = false): BaseLayoutPro
         active: 'url',
       },
       {
-        text: t.team,
-        url: `/${locale}/team`,
-        active: 'nested-url',
-      },
-      {
         text: t.download,
         url: `/${locale}/download`,
         active: 'nested-url',
@@ -340,6 +385,10 @@ export function baseOptions(locale: string, enableSearch = false): BaseLayoutPro
         text: t.wiki,
         url: `/${locale}/wiki/`,
         active: 'nested-url',
+      },
+      {
+        type: 'custom',
+        children: <DevMenu locale={locale} />,
       },
       {
         text: t.sponsorship,
