@@ -57,12 +57,16 @@ function Logo() {
       <img
         src="/logo-black.png"
         alt="BlankOn"
-        className="block h-6 w-auto dark:hidden"
+        width={796}
+        height={189}
+        className="block h-6 w-auto max-w-full shrink-0 object-contain dark:hidden"
       />
       <img
         src="/logo-white.png"
         alt="BlankOn"
-        className="hidden h-4 w-auto dark:block"
+        width={796}
+        height={189}
+        className="hidden h-6 w-auto max-w-full shrink-0 object-contain dark:block"
       />
     </>
   )
@@ -129,9 +133,9 @@ const translations = {
         q3: 'Apa kriteria untuk menjadi kontributor inti proyek kebangkitan ini?',
         a3: 'Untuk menjadi salah satu dari kami, Anda perlu membuktikan seberapa geeky Anda sebenarnya dan kemauan untuk mengotori tangan Anda dengan terminal emulator. Gen-Z lebih diutamakan, meskipun kami tidak memiliki batasan ketat untuk itu. Bawa semangat, buktikan Anda salah satu dari kami, maka Anda masuk.',
         q4: 'Bagaimana cara mendaftar?',
-        a4: 'Silakan kirim CV Anda ke herpiko@gmail.com dan kami akan mempersiapkan sesi wawancara untuk Anda.',
+        a4: 'Silakan kirim CV Anda ke herpiko@blankon.id dan kami akan mempersiapkan sesi wawancara untuk Anda.',
         q5: 'Saya mantan kontributor BlankOn, apakah saya bisa bergabung?',
-        a5: 'Silakan kirim CV Anda ke herpiko@gmail.com dan kami akan mempersiapkan sesi wawancara untuk Anda.',
+        a5: 'Silakan kirim CV Anda ke herpiko@blankon.id dan kami akan mempersiapkan sesi wawancara untuk Anda.',
         q6: 'Apakah ini tempat untuk belajar dari nol?',
         a6: 'Belum. Tentu tidak sekarang. Pada tahap ini, kami membutuhkan orang-orang yang sudah memiliki kemampuan Linux tingkat menengah dan rasa ingin tahu yang berlebihan untuk membantu membuat kebangkitan ini berhasil. Mentor tidak akan memberi makan Anda dari nol. Anda seharusnya sudah nyaman hidup di dalam terminal dan sesekali berdebat dengannya.',
         q7: 'Apa yang bisa saya harapkan dari proyek ini? Apa yang baru di BlankOn?',
@@ -145,6 +149,21 @@ const translations = {
       },
       updatesTitle: 'Perkembangan',
       updates: [
+        {
+          date: '2026-09-04',
+          text: 'Pembaruan besar untuk IRGSH, pabrik paket BlankOn. IRGSH kini mendukung banyak distribusi sekaligus dan dapat mengimpor paket langsung dari sumber lain, terutama untuk mengambil pembaruan paket dan pembaruan keamanan. Pendekatan multi-distribusi ini juga membuka jalan bagi dukungan multi-arsitektur di masa depan.',
+          url: 'http://irgsh.blankonlinux.id/',
+        },
+        {
+          date: '2026-08-03',
+          text: 'Proses pemaketan kami kini dapat direproduksi. Jika repositori kami rusak, kami cukup mengulang proses pemaketan yang terdaftar di PackageList.md.',
+          url: 'https://github.com/BlankOn/revival/blob/main/Packages/PackageList.md',
+        },
+        {
+          date: '2026-07-21',
+          text: 'Administrasi Yayasan BlankOn telah rampung. Kami kini memiliki rekening bank resmi yang dapat dipercaya dan digunakan untuk menerima donasi.',
+          url: 'https://blankon.id/en/news/blankon-foundation-official-bank-account-number',
+        },
         {
           date: '2026-02-07',
           text: 'Yayasan BlankOn telah resmi berdiri secara hukum. Dewan pengurus terdiri dari Rusmanto, Akhmat Safrudin, Slamet Santoso, Iwan Setiawan, dan Herpiko Dwi Aguno. Yayasan BlankOn adalah badan hukum terpisah yang dibentuk untuk mendukung ekosistem open-source yang lebih luas, komunitas, dan proyek-proyek di Indonesia. Sementara itu, BlankOn Linux akan tetap berjalan sebagai proyek open-source yang independen, dengan Yayasan memberikan dukungan finansial dan hukum penuh.',
@@ -269,9 +288,9 @@ const translations = {
         q3: 'What are the criteria to become a core contributor of the revival project?',
         a3: 'To become one, you need to prove just how geeky you really are and the willingness to get your hands dirty with your terminal emulator. Gen-Z is preferred, although we don\'t have a hard limit on that. Bring the spirit, prove you\'re one of us then you\'re in.',
         q4: 'How to apply?',
-        a4: 'Please send your CV to herpiko@gmail.com then we will prepare an interview session for you.',
+        a4: 'Please send your CV to herpiko@blankon.id then we will prepare an interview session for you.',
         q5: 'I am a former contributor of BlankOn, can I join?',
-        a5: 'Please send your CV to herpiko@gmail.com then we will prepare an interview session for you.',
+        a5: 'Please send your CV to herpiko@blankon.id then we will prepare an interview session for you.',
         q6: 'Is this a place to learn from scratch?',
         a6: 'Not yet. Definitely not right now. At this stage, we need people who already have intermediate Linux skills and an unhealthy amount of curiosity to help make this revival actually work. Mentors won\'t feed you from zero. You should already be comfortable living inside a terminal and occasionally arguing with it.',
         q7: 'What can I expect from the project? What is new in BlankOn?',
@@ -285,6 +304,21 @@ const translations = {
       },
       updatesTitle: 'Updates',
       updates: [
+        {
+          date: '2026-09-04',
+          text: 'A major update for IRGSH, the packaging factory of the distro. IRGSH now supports multiple distributions and can import packages directly from other sources, mainly to cherry-pick package updates and security updates. The multi-distro approach also opens the door to multi-architecture support in the future.',
+          url: 'http://irgsh.blankonlinux.id/',
+        },
+        {
+          date: '2026-08-03',
+          text: 'Our packaging process is now reproducible. If our repository breaks, we simply repeat the packaging process listed in PackageList.md.',
+          url: 'https://github.com/BlankOn/revival/blob/main/Packages/PackageList.md',
+        },
+        {
+          date: '2026-07-21',
+          text: 'The BlankOn Foundation paperwork is now complete. We have an official bank account that can be trusted and used for donations.',
+          url: 'https://blankon.id/en/news/blankon-foundation-official-bank-account-number',
+        },
         {
           date: '2026-02-07',
           text: 'The BlankOn Foundation has been legally established. The board members are Rusmanto, Akhmat Safrudin, Slamet Santoso, Iwan Setiawan, and Herpiko Dwi Aguno. The BlankOn Foundation is a separate legal entity established to support the broader open-source ecosystem, communities, and projects in Indonesia. Meanwhile, BlankOn Linux will continue as an independent open-source project, with the Foundation providing full financial and legal support.',
