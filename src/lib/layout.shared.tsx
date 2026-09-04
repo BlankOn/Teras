@@ -83,8 +83,8 @@ const translations = {
     welcome: 'Selamat datang di BlankOn',
     downloadDesc: 'Halaman unduh BlankOn',
     downloadPage: {
-      title: 'Unduh BlankOn',
-      subtitle: 'Unduh image live BlankOn terbaru untuk arsitektur amd64.',
+      title: 'Unduh BlankOn Linux',
+      subtitle: 'Unduh image live BlankOn Linux terbaru untuk arsitektur amd64.',
       dailyBuildWarning: 'Ini adalah jahitan harian (daily build). Mungkin mengandung bug, fitur yang belum stabil, atau bahkan tidak dapat di-boot sama sekali.',
       downloadButton: 'Unduh ISO',
       fileDetails: 'Detail Berkas',
@@ -114,14 +114,14 @@ const translations = {
     homepage: {
       heroTitle: 'BlankOn Revival Project',
       heroTagline: [
-        'Sebuah usaha untuk membangkitkan kembali proyek BlankOn',
+        'Sebuah usaha untuk membangkitkan kembali proyek BlankOn Linux',
         'yang sudah lama mati suri dari kedalaman /dev/null',
       ],
       downloadIso: 'Unduh ISO',
       readDocs: 'Dokumentasi',
       aboutTitle: 'Tentang',
       aboutDescription:
-        'BlankOn adalah distribusi Linux Indonesia berbasis Debian yang telah menjadi gerakan open-source sejak 2004. Setelah bertahun-tahun tidak aktif, tim baru telah membangun ulang infrastruktur dan merilis ISO pertama yang dapat di-boot dari sistem build IRGSH kami sendiri. Mari unduh, jalankan, dan kembangkan bersama-sama.',
+        'BlankOn Linux adalah distribusi Linux Indonesia berbasis Debian yang telah menjadi gerakan open-source sejak 2004. Setelah bertahun-tahun tidak aktif, tim baru telah membangun ulang infrastruktur dan merilis ISO pertama yang dapat di-boot dari sistem build IRGSH kami sendiri. Mari unduh, jalankan, dan kembangkan bersama-sama.',
       teamTitle: 'Tim',
       sponsorsTitle: 'Sponsor',
       faqTitle: 'Tanya Ini Lagi Itu Lagi (TILIL)',
@@ -153,6 +153,11 @@ const translations = {
           date: '2026-09-04',
           text: 'Pembaruan besar untuk IRGSH, pabrik paket BlankOn. IRGSH kini mendukung banyak distribusi sekaligus dan dapat mengimpor paket langsung dari sumber lain, terutama untuk mengambil pembaruan paket dan pembaruan keamanan. Pendekatan multi-distribusi ini juga membuka jalan bagi dukungan multi-arsitektur di masa depan.',
           url: 'http://irgsh.blankonlinux.id/',
+        },
+        {
+          date: '2026-08-31',
+          text: 'Salah satu kontributor inti kami menyumbangkan sebuah mesin bertenaga. Dengan ini kami dapat memensiunkan mesin frankenstein di STT-NF dan memindahkan infrastruktur kami ke sistem yang layak. Terima kasih, Raska! Kini proyek ini memiliki tiga mesin sponsor, yang akan digunakan bersama Yayasan sekaligus untuk mendukung inisiatif open-source lain di luar Yayasan yang memiliki visi serupa.',
+          url: 'https://blankon.id/en/news/8labs-corporate-sponsor',
         },
         {
           date: '2026-08-03',
@@ -238,8 +243,8 @@ const translations = {
     welcome: 'Welcome to BlankOn',
     downloadDesc: 'BlankOn download page',
     downloadPage: {
-      title: 'Download BlankOn',
-      subtitle: 'Get the latest BlankOn live image for amd64 architecture.',
+      title: 'Download BlankOn Linux',
+      subtitle: 'Get the latest BlankOn Linux live image for amd64 architecture.',
       dailyBuildWarning: 'This is a daily stitch (daily build). It may contain bugs, unstable features, or may not even boot at all.',
       downloadButton: 'Download ISO',
       fileDetails: 'File Details',
@@ -269,14 +274,14 @@ const translations = {
     homepage: {
       heroTitle: 'BlankOn Revival Project',
       heroTagline: [
-        'An attempt to bring back the long-dormant BlankOn project',
+        'An attempt to bring back the long-dormant BlankOn Linux project',
         'from the depths of /dev/null',
       ],
       downloadIso: 'Download ISO',
       readDocs: 'Documentation',
       aboutTitle: 'About',
       aboutDescription:
-        'BlankOn is an Indonesian Linux distribution based on Debian and an open-source movement since 2004. After years of dormancy, a new team has rebuilt the infrastructure and shipped the first bootable ISO from our own IRGSH build system. Download it, boot it, hack on it.',
+        'BlankOn Linux is an Indonesian Linux distribution based on Debian and an open-source movement since 2004. After years of dormancy, a new team has rebuilt the infrastructure and shipped the first bootable ISO from our own IRGSH build system. Download it, boot it, hack on it.',
       teamTitle: 'Team',
       sponsorsTitle: 'Sponsors',
       faqTitle: 'FAQ',
@@ -308,6 +313,11 @@ const translations = {
           date: '2026-09-04',
           text: 'A major update for IRGSH, the packaging factory of the distro. IRGSH now supports multiple distributions and can import packages directly from other sources, mainly to cherry-pick package updates and security updates. The multi-distro approach also opens the door to multi-architecture support in the future.',
           url: 'http://irgsh.blankonlinux.id/',
+        },
+        {
+          date: '2026-08-31',
+          text: 'One of our core contributors sponsored a beefy machine. This lets us retire the frankenstein machine at STT-NF and migrate our infrastructure onto a proper one. Thank you, Raska! The project now runs on three sponsored machines, which will serve the work of the Foundation and also support other open-source initiatives outside the Foundation that share the same vision.',
+          url: 'https://blankon.id/en/news/8labs-corporate-sponsor',
         },
         {
           date: '2026-08-03',
