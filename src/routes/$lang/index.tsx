@@ -19,7 +19,9 @@ function Home() {
           <img
             src="/blankon-revival-project.png"
             alt="BlankOn Revival Project"
-            className="mb-8 h-56 w-auto"
+            width={1794}
+            height={728}
+            className="mb-8 h-auto max-h-56 w-auto max-w-full object-contain"
           />
           <p className="mt-4 max-w-2xl text-lg text-fd-muted-foreground">
             {Array.isArray(t.homepage.heroTagline)
