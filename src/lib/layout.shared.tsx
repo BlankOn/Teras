@@ -4,10 +4,10 @@ import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared'
 import { i18n } from '@/lib/i18n'
 
 const externalDevLinks = [
-  // IRGSH opens in the same tab; the rest open in a new one.
+  // IRGSH, Packages and Security navigate in place; the rest open in a new tab.
   { text: 'IRGSH', url: 'https://irgsh.blankonlinux.id/', sameTab: true },
-  { text: 'Packages', url: 'https://packages.blankonlinux.id/' },
-  { text: 'Security', url: 'https://security.blankonlinux.id/' },
+  { text: 'Packages', url: 'https://packages.blankonlinux.id/', sameTab: true },
+  { text: 'Security', url: 'https://security.blankonlinux.id/', sameTab: true },
   { text: 'Jahitan', url: 'https://jahitan.blankonlinux.id/', icon: true },
   { text: 'Arsip', url: 'https://arsip.blankonlinux.id/', icon: true },
   { text: 'Arsip Dev', url: 'https://arsip-dev.blankonlinux.id/', icon: true },
