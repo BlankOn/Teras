@@ -72,9 +72,11 @@ function DevMenu({ locale }: { locale: string }) {
           <path d="M6 9l6 6 6-6" />
         </svg>
       </button>
+      {/* Inside the mobile menu the popup would be clipped by the panel, so it
+          expands inline there and only floats from `sm` upwards. */}
       <ul
-        className={`absolute right-0 top-full z-50 mt-1 min-w-[160px] rounded-md border border-fd-border bg-fd-background py-1 shadow-md transition-all ${
-          open ? 'visible opacity-100' : 'invisible opacity-0'
+        className={`z-50 min-w-[160px] py-1 transition-all max-sm:w-full sm:absolute sm:right-0 sm:top-full sm:mt-1 sm:rounded-md sm:border sm:border-fd-border sm:bg-fd-background sm:shadow-md ${
+          open ? 'visible opacity-100' : 'invisible opacity-0 max-sm:hidden'
         }`}
       >
         {links.map((link) => (
@@ -83,7 +85,7 @@ function DevMenu({ locale }: { locale: string }) {
               href={link.url}
               onClick={() => setOpen(false)}
               {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-              className="block px-4 py-2 text-sm text-fd-muted-foreground hover:bg-fd-accent hover:text-fd-accent-foreground"
+              className="block py-2 text-sm text-fd-muted-foreground hover:text-fd-accent-foreground max-sm:ps-4 sm:px-4 sm:hover:bg-fd-accent"
             >
               {link.text}
             </a>

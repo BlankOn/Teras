@@ -1,11 +1,21 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { HomeLayout } from 'fumadocs-ui/layouts/home'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, ExternalLink } from 'lucide-react'
 import { useState } from 'react'
 import { baseOptions, getTranslations } from '@/lib/layout.shared'
 import { cn } from '@/lib/cn'
 
 export const Route = createFileRoute('/$lang/')({ component: Home })
+
+// Long raw URLs wrap badly on phones; show the host instead and keep the full
+// address in the link's title.
+function linkLabel(url: string) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '')
+  } catch {
+    return url
+  }
+}
 
 function Home() {
   const { lang } = Route.useParams()
@@ -67,27 +77,24 @@ function Home() {
           </h2>
           <ol className="relative border-s border-fd-border">
             {t.homepage.updates.map((item) => (
-              <li key={item.date} className="mb-8 ms-4">
+              <li key={item.date} className="mb-8 ms-5 sm:ms-6">
                 <div className="absolute -start-1.5 mt-1.5 h-3 w-3 rounded-full border border-fd-background bg-fd-muted-foreground" />
-                <time className="mb-1 text-sm font-normal text-fd-muted-foreground">
+                <time className="block text-sm font-normal text-fd-muted-foreground">
                   {item.date}
                 </time>
-                <p className="mt-1 text-base text-fd-foreground">
-                  {item.text}
-                  {item.url && (
-                    <>
-                      {' '}
-                      <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-fd-primary underline underline-offset-4 hover:opacity-80"
-                      >
-                        {item.url}
-                      </a>
-                    </>
-                  )}
-                </p>
+                <p className="mt-1 text-base text-fd-foreground">{item.text}</p>
+                {item.url && (
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={item.url}
+                    className="mt-2 inline-flex max-w-full items-center gap-1 break-words text-sm text-fd-primary underline underline-offset-4 hover:opacity-80"
+                  >
+                    {linkLabel(item.url)}
+                    <ExternalLink className="size-3.5 shrink-0" aria-hidden />
+                  </a>
+                )}
               </li>
             ))}
           </ol>
