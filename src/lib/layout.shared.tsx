@@ -14,9 +14,12 @@ const externalDevLinks = [
   { text: 'Github', url: 'https://github.com/blankon', icon: true },
 ]
 
+const CLOSE_DELAY_MS = 100
+
 function DevMenu({ locale }: { locale: string }) {
   const [open, setOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const links = [
     { text: 'Team', url: `/${locale}/team`, external: false },
@@ -41,26 +44,51 @@ function DevMenu({ locale }: { locale: string }) {
     }
   }, [open])
 
+  // Drop any pending close when the timer is no longer wanted.
+  const cancelClose = () => {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current)
+      closeTimer.current = null
+    }
+  }
+
+  useEffect(() => cancelClose, [])
+
   // Devices with a real hovering pointer open the menu on hover; touch devices
   // have no hover state, so they toggle it by tapping the button.
   const canHover = () => window.matchMedia('(hover: hover)').matches
-  const hoverOpen = (value: boolean) => () => {
-    if (canHover()) setOpen(value)
+
+  const openOnHover = () => {
+    cancelClose()
+    if (canHover()) setOpen(true)
+  }
+
+  // Closing lags slightly so brushing past the edge of the menu does not
+  // dismiss it mid-move.
+  const closeOnHover = () => {
+    if (!canHover()) return
+    cancelClose()
+    closeTimer.current = setTimeout(() => setOpen(false), CLOSE_DELAY_MS)
   }
 
   return (
     <div
       ref={containerRef}
-      className="relative"
-      onMouseEnter={hoverOpen(true)}
-      onMouseLeave={hoverOpen(false)}
+      // On the top bar the item stretches to the full header height instead of
+      // relying on padding, so the whole strip triggers the dropdown.
+      className="relative max-sm:w-full sm:flex sm:h-14 sm:items-center"
+      onMouseEnter={openOnHover}
+      onMouseLeave={closeOnHover}
     >
       <button
         type="button"
         aria-expanded={open}
         aria-haspopup="menu"
-        onClick={() => setOpen((value) => (canHover() ? true : !value))}
-        className="inline-flex items-center gap-1 p-2 text-fd-muted-foreground transition-colors hover:text-fd-accent-foreground [&_svg]:size-4"
+        onClick={() => {
+          cancelClose()
+          setOpen((value) => (canHover() ? true : !value))
+        }}
+        className="inline-flex items-center gap-1 px-2 py-0 text-fd-muted-foreground transition-colors hover:text-fd-accent-foreground max-sm:py-2 sm:h-full [&_svg]:size-4"
       >
         Development
         <svg
@@ -76,7 +104,7 @@ function DevMenu({ locale }: { locale: string }) {
       {/* Inside the mobile menu the popup would be clipped by the panel, so it
           expands inline there and only floats from `sm` upwards. */}
       <ul
-        className={`z-50 min-w-[160px] py-1 transition-all max-sm:w-full sm:absolute sm:right-0 sm:top-full sm:mt-1 sm:rounded-md sm:border sm:border-fd-border sm:bg-fd-background sm:shadow-md ${
+        className={`z-50 min-w-[160px] py-1 transition-all max-sm:w-full sm:absolute sm:right-0 sm:top-full sm:rounded-md sm:border sm:border-fd-border sm:bg-fd-background sm:shadow-md ${
           open ? 'visible opacity-100' : 'invisible opacity-0 max-sm:hidden'
         }`}
       >
@@ -84,7 +112,10 @@ function DevMenu({ locale }: { locale: string }) {
           <li key={link.url}>
             <a
               href={link.url}
-              onClick={() => setOpen(false)}
+              onClick={() => {
+                cancelClose()
+                setOpen(false)
+              }}
               {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
               className="flex items-center gap-1.5 py-2 text-sm text-fd-muted-foreground hover:text-fd-accent-foreground max-sm:ps-4 sm:px-4 sm:hover:bg-fd-accent"
             >
