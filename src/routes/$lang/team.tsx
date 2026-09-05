@@ -29,7 +29,7 @@ function MemberAvatar({ name, github }: { name: string; github: string }) {
   if (!github || failed) {
     return (
       <div
-        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white"
+        className="flex h-28 w-28 shrink-0 items-center justify-center rounded-full text-2xl font-bold text-white"
         style={{ backgroundColor: getColor(name) }}
       >
         {getInitials(name)}
@@ -39,9 +39,14 @@ function MemberAvatar({ name, github }: { name: string; github: string }) {
 
   return (
     <img
-      src={`https://github.com/${github}.png?size=80`}
+      // The image can fail before hydration attaches onError, which would leave
+      // the alt text spilling out of the circle; catch that case on mount too.
+      ref={(node) => {
+        if (node?.complete && node.naturalWidth === 0) setFailed(true)
+      }}
+      src={`https://github.com/${github}.png?size=256`}
       alt={name}
-      className="h-12 w-12 shrink-0 rounded-full bg-fd-border object-cover"
+      className="h-28 w-28 shrink-0 rounded-full bg-fd-border object-cover"
       loading="lazy"
       onError={() => setFailed(true)}
     />
@@ -54,28 +59,27 @@ function Team() {
 
   return (
     <HomeLayout {...baseOptions(lang)}>
-      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 py-16">
+      <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col px-4 py-16">
         <h1 className="mb-8 text-center text-3xl font-bold">{t.team}</h1>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {contributorsData.contributors
             .filter((m) => m.project === 'blankonlinux')
+            .sort((a, b) => a.name.localeCompare(b.name))
             .map((member) => (
               <a
                 key={member.github}
                 href={`https://github.com/${member.github}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-4 rounded-xl border border-fd-border bg-fd-card p-4 transition-all hover:border-blue-300 hover:shadow-md dark:hover:border-blue-700"
+                className="flex flex-col items-center rounded-xl p-4 text-center transition-colors hover:bg-fd-accent"
               >
                 <MemberAvatar name={member.name} github={member.github} />
-                <div className="min-w-0">
-                  <p className="truncate font-medium text-fd-foreground">
-                    {member.name}
-                  </p>
-                  <p className="truncate text-sm text-fd-muted-foreground">
-                    {member.contribution[lang as keyof typeof member.contribution]}
-                  </p>
-                </div>
+                <p className="mt-3 text-base font-medium text-fd-foreground">
+                  {member.name}
+                </p>
+                <p className="text-sm text-fd-muted-foreground">
+                  {member.contribution[lang as keyof typeof member.contribution]}
+                </p>
               </a>
             ))}
         </div>

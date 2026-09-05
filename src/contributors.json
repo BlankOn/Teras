@@ -7,12 +7,6 @@
       "contribution": { "id": "Infrastruktur", "en": "Infrastructure" }
     },
     {
-      "name": "Bagus Kusuma Loka",
-      "github": "kusuma-loka",
-      "project": "blankonlinux",
-      "contribution": { "id": "Infrastruktur", "en": "Infrastructure" }
-    },
-    {
       "name": "Firmansyah Dzakwan Arifien",
       "github": "FirmansyahDzakwanArifien",
       "project": "blankonlinux",
@@ -64,6 +58,12 @@
       "github": "hahn",
       "project": "blankonlinux",
       "contribution": { "id": "Pemelihara Paket", "en": "Package Maintainer" }
+    },
+    {
+      "name": "Sistiandy Syahbana Nugraha",
+      "github": "siscms",
+      "project": "blankonlinux",
+      "contribution": { "id": "Hubungan Masyarakat", "en": "Public Relation" }
     }
   ],
   "donors": [

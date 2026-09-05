@@ -3,7 +3,8 @@ import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared'
 import { i18n } from '@/lib/i18n'
 
 const externalDevLinks = [
-  { text: 'IRGSH', url: 'http://irgsh.blankonlinux.id/' },
+  // IRGSH opens in the same tab; the rest open in a new one.
+  { text: 'IRGSH', url: 'http://irgsh.blankonlinux.id/', sameTab: true },
   { text: 'Security', url: 'https://security.blankonlinux.id/' },
   { text: 'Packages', url: 'https://packages.blankonlinux.id/' },
   { text: 'Jahitan', url: 'http://jahitan.blankonlinux.id/' },
@@ -18,7 +19,7 @@ function DevMenu({ locale }: { locale: string }) {
 
   const links = [
     { text: 'Team', url: `/${locale}/team`, external: false },
-    ...externalDevLinks.map((l) => ({ ...l, external: true })),
+    ...externalDevLinks.map((l) => ({ ...l, external: !('sameTab' in l && l.sameTab) })),
   ]
 
   useEffect(() => {
@@ -457,11 +458,6 @@ export function baseOptions(locale: string, enableSearch = false): BaseLayoutPro
       url: `/${locale}`,
     },
     links: [
-      {
-        text: t.home,
-        url: `/${locale}`,
-        active: 'url',
-      },
       {
         text: t.download,
         url: `/${locale}/download`,
