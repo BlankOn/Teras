@@ -27,11 +27,18 @@ function Home() {
         {/* Hero Section */}
         <section className="flex flex-col items-center justify-center px-4 pb-8 pt-24 text-center">
           <img
-            src="/blankon-revival-project.png"
+            src="/blankon-revival-project-black.png"
             alt="BlankOn Revival Project"
             width={1794}
             height={728}
-            className="mb-8 h-auto max-h-56 w-auto max-w-full object-contain"
+            className="mb-8 block h-auto max-h-56 w-auto max-w-full object-contain dark:hidden"
+          />
+          <img
+            src="/blankon-revival-project-white.png"
+            alt="BlankOn Revival Project"
+            width={726}
+            height={294}
+            className="mb-8 hidden h-auto max-h-56 w-auto max-w-full object-contain dark:block"
           />
           <p className="mt-4 max-w-2xl text-lg text-fd-muted-foreground">
             {Array.isArray(t.homepage.heroTagline)

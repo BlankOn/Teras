@@ -1,3 +1,4 @@
+import { ExternalLink } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared'
 import { i18n } from '@/lib/i18n'
@@ -5,12 +6,12 @@ import { i18n } from '@/lib/i18n'
 const externalDevLinks = [
   // IRGSH opens in the same tab; the rest open in a new one.
   { text: 'IRGSH', url: 'https://irgsh.blankonlinux.id/', sameTab: true },
-  { text: 'Security', url: 'https://security.blankonlinux.id/' },
   { text: 'Packages', url: 'https://packages.blankonlinux.id/' },
-  { text: 'Jahitan', url: 'https://jahitan.blankonlinux.id/' },
-  { text: 'Arsip', url: 'https://arsip.blankonlinux.id/' },
-  { text: 'Arsip Dev', url: 'https://arsip-dev.blankonlinux.id/' },
-  { text: 'Github', url: 'https://github.com/blankon' },
+  { text: 'Security', url: 'https://security.blankonlinux.id/' },
+  { text: 'Jahitan', url: 'https://jahitan.blankonlinux.id/', icon: true },
+  { text: 'Arsip', url: 'https://arsip.blankonlinux.id/', icon: true },
+  { text: 'Arsip Dev', url: 'https://arsip-dev.blankonlinux.id/', icon: true },
+  { text: 'Github', url: 'https://github.com/blankon', icon: true },
 ]
 
 function DevMenu({ locale }: { locale: string }) {
@@ -85,14 +86,26 @@ function DevMenu({ locale }: { locale: string }) {
               href={link.url}
               onClick={() => setOpen(false)}
               {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-              className="block py-2 text-sm text-fd-muted-foreground hover:text-fd-accent-foreground max-sm:ps-4 sm:px-4 sm:hover:bg-fd-accent"
+              className="flex items-center gap-1.5 py-2 text-sm text-fd-muted-foreground hover:text-fd-accent-foreground max-sm:ps-4 sm:px-4 sm:hover:bg-fd-accent"
             >
               {link.text}
+              {'icon' in link && link.icon && (
+                <ExternalLink className="size-3.5 shrink-0 text-fd-muted-foreground/70" aria-hidden />
+              )}
             </a>
           </li>
         ))}
       </ul>
     </div>
+  )
+}
+
+function ExternalText({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="inline-flex items-center gap-1.5">
+      {children}
+      <ExternalLink className="size-3.5 shrink-0 text-fd-muted-foreground/70" aria-hidden />
+    </span>
   )
 }
 
@@ -475,12 +488,12 @@ export function baseOptions(locale: string, enableSearch = false): BaseLayoutPro
         children: <DevMenu locale={locale} />,
       },
       {
-        text: t.sponsorship,
+        text: <ExternalText>{t.sponsorship}</ExternalText>,
         url: 'https://blankon.id/en/sponsorship',
         external: true,
       },
       {
-        text: t.donate,
+        text: <ExternalText>{t.donate}</ExternalText>,
         url: 'https://blankon.id/en/donate',
         external: true,
       },
