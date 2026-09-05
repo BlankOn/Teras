@@ -4,12 +4,12 @@ import { i18n } from '@/lib/i18n'
 
 const externalDevLinks = [
   // IRGSH opens in the same tab; the rest open in a new one.
-  { text: 'IRGSH', url: 'http://irgsh.blankonlinux.id/', sameTab: true },
+  { text: 'IRGSH', url: 'https://irgsh.blankonlinux.id/', sameTab: true },
   { text: 'Security', url: 'https://security.blankonlinux.id/' },
   { text: 'Packages', url: 'https://packages.blankonlinux.id/' },
-  { text: 'Jahitan', url: 'http://jahitan.blankonlinux.id/' },
+  { text: 'Jahitan', url: 'https://jahitan.blankonlinux.id/' },
   { text: 'Arsip', url: 'https://arsip.blankonlinux.id/' },
-  { text: 'Arsip Dev', url: 'http://arsip-dev.blankonlinux.id/' },
+  { text: 'Arsip Dev', url: 'https://arsip-dev.blankonlinux.id/' },
   { text: 'Github', url: 'https://github.com/blankon' },
 ]
 
