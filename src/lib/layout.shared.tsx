@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared'
 import { i18n } from '@/lib/i18n'
 
@@ -12,20 +13,56 @@ const externalDevLinks = [
 ]
 
 function DevMenu({ locale }: { locale: string }) {
+  const [open, setOpen] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+
   const links = [
     { text: 'Team', url: `/${locale}/team`, external: false },
     ...externalDevLinks.map((l) => ({ ...l, external: true })),
   ]
 
+  useEffect(() => {
+    if (!open) return
+
+    const onPointerDown = (event: PointerEvent) => {
+      if (!containerRef.current?.contains(event.target as Node)) setOpen(false)
+    }
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false)
+    }
+
+    document.addEventListener('pointerdown', onPointerDown)
+    document.addEventListener('keydown', onKeyDown)
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown)
+      document.removeEventListener('keydown', onKeyDown)
+    }
+  }, [open])
+
+  // Devices with a real hovering pointer open the menu on hover; touch devices
+  // have no hover state, so they toggle it by tapping the button.
+  const canHover = () => window.matchMedia('(hover: hover)').matches
+  const hoverOpen = (value: boolean) => () => {
+    if (canHover()) setOpen(value)
+  }
+
   return (
-    <div className="group relative">
+    <div
+      ref={containerRef}
+      className="relative"
+      onMouseEnter={hoverOpen(true)}
+      onMouseLeave={hoverOpen(false)}
+    >
       <button
         type="button"
+        aria-expanded={open}
+        aria-haspopup="menu"
+        onClick={() => setOpen((value) => (canHover() ? true : !value))}
         className="inline-flex items-center gap-1 p-2 text-fd-muted-foreground transition-colors hover:text-fd-accent-foreground [&_svg]:size-4"
       >
         Development
         <svg
-          className="h-3 w-3 transition-transform group-hover:rotate-180"
+          className={`h-3 w-3 transition-transform ${open ? 'rotate-180' : ''}`}
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -34,11 +71,16 @@ function DevMenu({ locale }: { locale: string }) {
           <path d="M6 9l6 6 6-6" />
         </svg>
       </button>
-      <ul className="invisible absolute right-0 top-full z-50 mt-1 min-w-[160px] rounded-md border border-fd-border bg-fd-background py-1 opacity-0 shadow-md transition-all group-hover:visible group-hover:opacity-100">
+      <ul
+        className={`absolute right-0 top-full z-50 mt-1 min-w-[160px] rounded-md border border-fd-border bg-fd-background py-1 shadow-md transition-all ${
+          open ? 'visible opacity-100' : 'invisible opacity-0'
+        }`}
+      >
         {links.map((link) => (
           <li key={link.url}>
             <a
               href={link.url}
+              onClick={() => setOpen(false)}
               {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
               className="block px-4 py-2 text-sm text-fd-muted-foreground hover:bg-fd-accent hover:text-fd-accent-foreground"
             >
