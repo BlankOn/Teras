@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as LangIndexRouteImport } from './routes/$lang/index'
 import { Route as ApiSearchRouteImport } from './routes/api/search'
 import { Route as LangTeamRouteImport } from './routes/$lang/team'
+import { Route as LangRevivalRouteImport } from './routes/$lang/revival'
 import { Route as LangDownloadRouteImport } from './routes/$lang/download'
 import { Route as LangWikiSplatRouteImport } from './routes/$lang/wiki/$'
 
@@ -36,6 +37,11 @@ const LangTeamRoute = LangTeamRouteImport.update({
   path: '/$lang/team',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LangRevivalRoute = LangRevivalRouteImport.update({
+  id: '/$lang/revival',
+  path: '/$lang/revival',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LangDownloadRoute = LangDownloadRouteImport.update({
   id: '/$lang/download',
   path: '/$lang/download',
@@ -50,6 +56,7 @@ const LangWikiSplatRoute = LangWikiSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$lang/download': typeof LangDownloadRoute
+  '/$lang/revival': typeof LangRevivalRoute
   '/$lang/team': typeof LangTeamRoute
   '/api/search': typeof ApiSearchRoute
   '/$lang': typeof LangIndexRoute
@@ -58,6 +65,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$lang/download': typeof LangDownloadRoute
+  '/$lang/revival': typeof LangRevivalRoute
   '/$lang/team': typeof LangTeamRoute
   '/api/search': typeof ApiSearchRoute
   '/$lang': typeof LangIndexRoute
@@ -67,6 +75,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$lang/download': typeof LangDownloadRoute
+  '/$lang/revival': typeof LangRevivalRoute
   '/$lang/team': typeof LangTeamRoute
   '/api/search': typeof ApiSearchRoute
   '/$lang/': typeof LangIndexRoute
@@ -77,6 +86,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$lang/download'
+    | '/$lang/revival'
     | '/$lang/team'
     | '/api/search'
     | '/$lang'
@@ -85,6 +95,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/$lang/download'
+    | '/$lang/revival'
     | '/$lang/team'
     | '/api/search'
     | '/$lang'
@@ -93,6 +104,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/$lang/download'
+    | '/$lang/revival'
     | '/$lang/team'
     | '/api/search'
     | '/$lang/'
@@ -102,6 +114,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LangDownloadRoute: typeof LangDownloadRoute
+  LangRevivalRoute: typeof LangRevivalRoute
   LangTeamRoute: typeof LangTeamRoute
   ApiSearchRoute: typeof ApiSearchRoute
   LangIndexRoute: typeof LangIndexRoute
@@ -138,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LangTeamRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$lang/revival': {
+      id: '/$lang/revival'
+      path: '/$lang/revival'
+      fullPath: '/$lang/revival'
+      preLoaderRoute: typeof LangRevivalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/$lang/download': {
       id: '/$lang/download'
       path: '/$lang/download'
@@ -158,6 +178,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LangDownloadRoute: LangDownloadRoute,
+  LangRevivalRoute: LangRevivalRoute,
   LangTeamRoute: LangTeamRoute,
   ApiSearchRoute: ApiSearchRoute,
   LangIndexRoute: LangIndexRoute,
