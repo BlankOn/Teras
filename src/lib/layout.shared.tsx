@@ -188,7 +188,7 @@ const translations = {
       scrollHint: 'Gulir ke bawah \u2193',
       panel2Title: 'Pembaruan Paling Mutakhir',
       panel2Body:
-        'Ini benar-benar Sid, salah satu makhluk yang bergerak paling kencang di alam semesta.',
+        'Dibangun langsung dari Sid, salah satu makhluk yang bergerak paling kencang di alam semesta Linux.',
       panel3Title: 'Dengan Sabuk Pengaman',
       panel3Body:
         'Mekanisme repositori staging dan para kontributor kami menjaga Anda dari liarnya Sid.',
@@ -367,7 +367,7 @@ const translations = {
       scrollHint: 'Scroll down \u2193',
       panel2Title: 'Bleeding Edge Updates',
       panel2Body:
-        "It's literally the Sid, one of the fastest moving thing in the universe.",
+        'Built straight from Sid, one of the fastest-moving things in the Linux universe.',
       panel3Title: 'With Seatbelt',
       panel3Body:
         "Our staging repository mechanism and our contributors are guarding you from Sid's sharp edges.",

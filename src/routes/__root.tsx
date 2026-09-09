@@ -65,7 +65,14 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body className="flex min-h-screen flex-col">
         <TanstackProvider>
-          <RootProvider i18n={provider(lang)}>{children}</RootProvider>
+          <RootProvider
+            // Dark is the default for first-time visitors; the theme toggle
+            // still offers light and system.
+            theme={{ defaultTheme: 'dark' }}
+            i18n={provider(lang)}
+          >
+            {children}
+          </RootProvider>
         </TanstackProvider>
         <Scripts />
       </body>
