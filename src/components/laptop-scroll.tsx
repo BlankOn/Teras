@@ -556,7 +556,7 @@ export default function LaptopScroll({
         <Panel>
           <Card>
             <h1 className="mb-3 text-[clamp(28px,5vw,44px)] font-bold leading-[1.12] tracking-[-0.02em]">
-              {copy.heroTitle}
+              {italiciseName(copy.heroTitle)}
             </h1>
             <p className="text-[#a7adba]">{copy.heroTagline}</p>
           </Card>
@@ -607,7 +607,7 @@ export default function LaptopScroll({
             </a>
 
             <p className="mx-auto mt-8 max-w-[46ch] text-[13px] leading-relaxed text-[#6f7684]">
-              {copy.credit}{' '}
+              {italiciseName(copy.credit)}{' '}
               <Link
                 to="/$lang/revival"
                 params={{ lang }}
@@ -623,9 +623,19 @@ export default function LaptopScroll({
   )
 }
 
+// The product name is set in italic wherever it appears in the copy.
+function italiciseName(text: string) {
+  return text
+    .split(/(Sinambung)/g)
+    .map((part, i) => (part === 'Sinambung' ? <em key={i}>{part}</em> : part))
+}
+
 function Panel({ children }: { children: React.ReactNode }) {
   return (
-    <section className="flex min-h-[100svh] items-center px-[8vw] max-md:items-end max-md:pb-[10vh]">
+    // Up to 1280px the card sits 8vw from the left edge. Past that it stops
+    // drifting outward and holds to a centred 1280px column instead, so on a
+    // wide monitor it stays left of the laptop rather than out at the margin.
+    <section className="flex min-h-[100svh] items-center pl-[max(8vw,calc((100vw-1280px)/2+102px))] pr-[8vw] max-md:items-end max-md:pb-[10vh]">
       {children}
     </section>
   )
