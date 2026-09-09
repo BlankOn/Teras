@@ -62,16 +62,27 @@ export default function LaptopScroll({
   copy: LaptopScrollCopy
 }) {
   const sceneRef = useRef<HTMLDivElement>(null)
+  const introRef = useRef<HTMLElement>(null)
   const hintRef = useRef<HTMLParagraphElement>(null)
   const finaleRef = useRef<HTMLDivElement>(null)
   const rootRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const container = sceneRef.current
+    const intro = introRef.current
     const hint = hintRef.current
     const finale = finaleRef.current
     const root = rootRef.current
-    if (!container || !hint || !finale || !root) return
+    if (!container || !intro || !hint || !finale || !root) return
+
+    // The site header sits above the hero and is part of the flow, so a full
+    // 100svh first panel hangs its content below the fold. Take the header
+    // height back off it.
+    const fitIntro = () => {
+      intro.style.minHeight = `calc(100svh - ${root.offsetTop}px)`
+    }
+    fitIntro()
+    window.addEventListener('resize', fitIntro)
 
     let disposed = false
     const isDisposed = () => disposed
@@ -117,7 +128,11 @@ export default function LaptopScroll({
       pmrem.dispose()
 
       // Front view: nearly level with the laptop, only slightly above.
-      const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100)
+      // A tight near/far range is what gives the depth buffer the precision to
+      // keep the screen from z-fighting with the panel behind it on mobile
+      // GPUs. Near stays at 2 rather than higher so the floor directly under
+      // the camera isn't clipped.
+      const camera = new THREE.PerspectiveCamera(35, 1, 2, 60)
       const lookAt = new THREE.Vector3(0, 0.95, 0)
 
       /* ---------- lights ---------- */
@@ -168,12 +183,17 @@ export default function LaptopScroll({
 
       /* ---------- laptop ---------- */
 
+      // macGroup is the root that yaws on the floor. The model's own origin is
+      // not its centre, so `centring` carries that offset - otherwise the yaw
+      // axis sits off to one side and the laptop swings out of frame.
       const macGroup = new THREE.Group()
       scene.add(macGroup)
+      const centring = new THREE.Group()
+      macGroup.add(centring)
       const lidGroup = new THREE.Group()
-      macGroup.add(lidGroup)
+      centring.add(lidGroup)
       const bottomGroup = new THREE.Group()
-      macGroup.add(bottomGroup)
+      centring.add(bottomGroup)
 
       let needsRender = true
 
@@ -295,12 +315,14 @@ export default function LaptopScroll({
         screenLight.rotation.set(Math.PI, 0, 0)
         lidGroup.add(screenLight)
 
-        // A black panel behind it, so the closed lid isn't see-through.
+        // A black panel behind it, so the closed lid isn't see-through. It
+        // sits well back rather than hairline-close, so the two never fight
+        // for the same depth.
         const darkScreen = new THREE.Mesh(
           screenMesh.geometry,
           darkPlasticMaterial,
         )
-        darkScreen.position.set(0, 10.5, -0.111)
+        darkScreen.position.set(0, 10.5, -0.18)
         darkScreen.rotation.set(Math.PI, Math.PI, 0)
         lidGroup.add(darkScreen)
       }
@@ -320,16 +342,18 @@ export default function LaptopScroll({
       const fitToScene = () => {
         lidGroup.rotation.x = LID_CLOSED
         lidGroup.position.z = LID_Z_CLOSED
+        macGroup.scale.setScalar(1)
+        centring.position.set(0, 0, 0)
         macGroup.updateMatrixWorld(true)
 
+        // Measured unscaled, so the offset applies in the model's own units.
         const box = new THREE.Box3().setFromObject(macGroup)
         const size = box.getSize(new THREE.Vector3())
-        macGroup.scale.setScalar(4.4 / size.x)
+        const center = box.getCenter(new THREE.Vector3())
 
-        macGroup.updateMatrixWorld(true)
-        const box2 = new THREE.Box3().setFromObject(macGroup)
-        const center = box2.getCenter(new THREE.Vector3())
-        macGroup.position.set(-center.x, -box2.min.y, -center.z)
+        macGroup.scale.setScalar(4.4 / size.x)
+        // Centre it on the yaw axis in x/z, and stand it on the floor in y.
+        centring.position.set(-center.x, -box.min.y, -center.z)
       }
 
       /* ---------- scroll driving ---------- */
@@ -387,7 +411,9 @@ export default function LaptopScroll({
       const resize = () => {
         const w = container.clientWidth
         const h = container.clientHeight
-        renderer.setSize(w, h, false)
+        // updateStyle must stay on: without it the canvas element lays out at
+        // its buffer size, which is devicePixelRatio times too big on phones.
+        renderer.setSize(w, h)
         camera.aspect = w / h
 
         // Pull back (and lift slightly) on narrow/portrait viewports so the
@@ -495,6 +521,7 @@ export default function LaptopScroll({
 
     return () => {
       disposed = true
+      window.removeEventListener('resize', fitIntro)
       cleanups.forEach((fn) => fn())
     }
   }, [])
@@ -517,7 +544,10 @@ export default function LaptopScroll({
 
       <div className="pointer-events-none relative z-10">
         {/* Stage one carries no copy, just the hint that there is more below. */}
-        <section className="flex min-h-[100svh] items-end justify-center px-[8vw] pb-[8vh]">
+        <section
+          ref={introRef}
+          className="flex min-h-[100svh] items-end justify-center px-[8vw] pb-[50px]"
+        >
           <p ref={hintRef} className="text-[13px] text-[#6f7684]">
             {copy.scrollHint}
           </p>
