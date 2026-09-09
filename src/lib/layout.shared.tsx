@@ -23,7 +23,10 @@ function DevMenu({ locale }: { locale: string }) {
 
   const links = [
     { text: 'Team', url: `/${locale}/team`, external: false },
-    ...externalDevLinks.map((l) => ({ ...l, external: !('sameTab' in l && l.sameTab) })),
+    ...externalDevLinks.map((l) => ({
+      ...l,
+      external: !('sameTab' in l && l.sameTab),
+    })),
   ]
 
   useEffect(() => {
@@ -116,12 +119,17 @@ function DevMenu({ locale }: { locale: string }) {
                 cancelClose()
                 setOpen(false)
               }}
-              {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+              {...(link.external
+                ? { target: '_blank', rel: 'noopener noreferrer' }
+                : {})}
               className="flex items-center gap-1.5 py-2 text-sm text-fd-muted-foreground hover:text-fd-accent-foreground max-sm:ps-4 sm:px-4 sm:hover:bg-fd-accent"
             >
               {link.text}
               {'icon' in link && link.icon && (
-                <ExternalLink className="size-3.5 shrink-0 text-fd-muted-foreground/70" aria-hidden />
+                <ExternalLink
+                  className="size-3.5 shrink-0 text-fd-muted-foreground/70"
+                  aria-hidden
+                />
               )}
             </a>
           </li>
@@ -135,7 +143,10 @@ function ExternalText({ children }: { children: React.ReactNode }) {
   return (
     <span className="inline-flex items-center gap-1.5">
       {children}
-      <ExternalLink className="size-3.5 shrink-0 text-fd-muted-foreground/70" aria-hidden />
+      <ExternalLink
+        className="size-3.5 shrink-0 text-fd-muted-foreground/70"
+        aria-hidden
+      />
     </span>
   )
 }
@@ -171,10 +182,29 @@ const translations = {
     donate: 'Donasi',
     welcome: 'Selamat datang di BlankOn',
     downloadDesc: 'Halaman unduh BlankOn',
+    sneakPeek: {
+      heroTitle: 'Bocoran: BlankOn Linux Sinambung',
+      heroTagline: 'Distro Linux rilis bergulir berbasis Debian.',
+      scrollHint: 'Gulir ke bawah \u2193',
+      panel2Title: 'Pembaruan Paling Mutakhir',
+      panel2Body:
+        'Dibangun langsung dari Sid, salah satu makhluk yang bergerak paling kencang di alam semesta Linux.',
+      panel3Title: 'Dengan Sabuk Pengaman',
+      panel3Body:
+        'Mekanisme repositori staging dan para kontributor kami menjaga Anda dari liarnya Sid.',
+      learnMore: 'Pelajari lebih lanjut',
+      comingSoon: 'Segera hadir\u2026',
+      cta: 'Ikuti perjalanan kami di grup Telegram',
+      credit:
+        'BlankOn Linux Sinambung dipersembahkan oleh tim BlankOn Revival Project.',
+      creditLink: 'Selengkapnya',
+    },
     downloadPage: {
       title: 'Unduh BlankOn Linux',
-      subtitle: 'Unduh image live BlankOn Linux terbaru untuk arsitektur amd64.',
-      dailyBuildWarning: 'Ini adalah jahitan harian (daily build). Mungkin mengandung bug, fitur yang belum stabil, atau bahkan tidak dapat di-boot sama sekali.',
+      subtitle:
+        'Unduh image live BlankOn Linux terbaru untuk arsitektur amd64.',
+      dailyBuildWarning:
+        'Ini adalah jahitan harian (daily build). Mungkin mengandung bug, fitur yang belum stabil, atau bahkan tidak dapat di-boot sama sekali.',
       downloadButton: 'Unduh ISO',
       fileDetails: 'Detail Berkas',
       filename: 'Nama Berkas',
@@ -331,10 +361,29 @@ const translations = {
     donate: 'Donate',
     welcome: 'Welcome to BlankOn',
     downloadDesc: 'BlankOn download page',
+    sneakPeek: {
+      heroTitle: 'Sneak Peek: BlankOn Linux Sinambung',
+      heroTagline: 'A rolling release Linux distro based on Debian.',
+      scrollHint: 'Scroll down \u2193',
+      panel2Title: 'Bleeding Edge Updates',
+      panel2Body:
+        'Built straight from Sid, one of the fastest-moving things in the Linux universe.',
+      panel3Title: 'With Seatbelt',
+      panel3Body:
+        "Our staging repository mechanism and our contributors are guarding you from Sid's sharp edges.",
+      learnMore: 'Learn more',
+      comingSoon: 'Coming soon\u2026',
+      cta: 'Follow our journey in our Telegram group',
+      credit:
+        'BlankOn Linux Sinambung is brought to you by the BlankOn Revival Project team.',
+      creditLink: 'See more',
+    },
     downloadPage: {
       title: 'Download BlankOn Linux',
-      subtitle: 'Get the latest BlankOn Linux live image for amd64 architecture.',
-      dailyBuildWarning: 'This is a daily stitch (daily build). It may contain bugs, unstable features, or may not even boot at all.',
+      subtitle:
+        'Get the latest BlankOn Linux live image for amd64 architecture.',
+      dailyBuildWarning:
+        'This is a daily stitch (daily build). It may contain bugs, unstable features, or may not even boot at all.',
       downloadButton: 'Download ISO',
       fileDetails: 'File Details',
       filename: 'Filename',
@@ -380,15 +429,15 @@ const translations = {
         q2: 'How can I contribute?',
         a2: 'Until the revival is complete, we will be operating with technical contributors only. We are opening positions for core contributors, but the selection process will be strict for several reasons. We collaborate in a public Telegram group where anyone can watch and join the movements then let the contribution happen naturally. We also desperately need donations in the form of hardware, bandwidth (server colocation), or cold hard cash. We have transparent reports here to show where every rupiah goes. Please contact @senyumslamet if you want to donate.',
         q3: 'What are the criteria to become a core contributor of the revival project?',
-        a3: 'To become one, you need to prove just how geeky you really are and the willingness to get your hands dirty with your terminal emulator. Gen-Z is preferred, although we don\'t have a hard limit on that. Bring the spirit, prove you\'re one of us then you\'re in.',
+        a3: "To become one, you need to prove just how geeky you really are and the willingness to get your hands dirty with your terminal emulator. Gen-Z is preferred, although we don't have a hard limit on that. Bring the spirit, prove you're one of us then you're in.",
         q4: 'How to apply?',
         a4: 'Please send your CV to herpiko@blankon.id then we will prepare an interview session for you.',
         q5: 'I am a former contributor of BlankOn, can I join?',
         a5: 'Please send your CV to herpiko@blankon.id then we will prepare an interview session for you.',
         q6: 'Is this a place to learn from scratch?',
-        a6: 'Not yet. Definitely not right now. At this stage, we need people who already have intermediate Linux skills and an unhealthy amount of curiosity to help make this revival actually work. Mentors won\'t feed you from zero. You should already be comfortable living inside a terminal and occasionally arguing with it.',
+        a6: "Not yet. Definitely not right now. At this stage, we need people who already have intermediate Linux skills and an unhealthy amount of curiosity to help make this revival actually work. Mentors won't feed you from zero. You should already be comfortable living inside a terminal and occasionally arguing with it.",
         q7: 'What can I expect from the project? What is new in BlankOn?',
-        a7: 'After the revival, BlankOn will reinforce its original goal of improving/leveraging people\'s capabilities by opening a broader range of non-technical roles. BlankOn will also lower contribution barriers while enforcing a stricter Code of Conduct, aimed at ensuring inclusivity and keeping the community healthy and contributor-friendly. The project will also work to maintain an optimal ratio of technical to non-technical contributors to make the technical product (at this point, a Linux distribution) sustainable and healthy.',
+        a7: "After the revival, BlankOn will reinforce its original goal of improving/leveraging people's capabilities by opening a broader range of non-technical roles. BlankOn will also lower contribution barriers while enforcing a stricter Code of Conduct, aimed at ensuring inclusivity and keeping the community healthy and contributor-friendly. The project will also work to maintain an optimal ratio of technical to non-technical contributors to make the technical product (at this point, a Linux distribution) sustainable and healthy.",
         q8: 'What is the success metric of the revival?',
         a8: 'You can download and install a fully-fledged, brand-new BlankOn Linux image, built, baked, and shipped directly from IRGSH. If you can boot it, run it, and hack on it, that is our revival milestone.',
         q9: 'What is the current progress?',
@@ -491,7 +540,10 @@ export function getTranslations(locale: string) {
   return translations.id
 }
 
-export function baseOptions(locale: string, enableSearch = false): BaseLayoutProps {
+export function baseOptions(
+  locale: string,
+  enableSearch = false,
+): BaseLayoutProps {
   const t = getTranslations(locale)
 
   return {
