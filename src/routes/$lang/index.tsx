@@ -7,7 +7,7 @@ import { baseOptions, getTranslations } from '@/lib/layout.shared'
 // /$lang/revival.
 export const Route = createFileRoute('/$lang/')({ component: Home })
 
-const TELEGRAM_URL = 'https://t.me/BlankOnLinux/1'
+const TELEGRAM_URL = 'https://t.me/BlankOnLinux'
 const STAGING_GIST_URL =
   'https://gist.github.com/herpiko/a1cde839af39636c8bc71929dfa709b9'
 // Praya, the town in Lombok the desktop is named after.
