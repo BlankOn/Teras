@@ -201,20 +201,23 @@ const translations = {
       ctaEngage: 'Bergabung',
       ctaContribute: 'Berkontribusi',
       ctaDonate: 'Donasi',
-      credit:
-        'BlankOn Linux Sinambung dipersembahkan oleh tim BlankOn Revival Project.',
-      creditLink: 'Selengkapnya',
+      // Broken where it should wrap, rather than wherever the width lands.
+      credit: [
+        'BlankOn Linux Sinambung dipersembahkan oleh',
+        'tim BlankOn Revival Project.',
+      ],
+      creditLink: 'Pelajari lebih lanjut',
     },
     downloadPage: {
-      title: 'Unduh BlankOn Linux',
+      title: 'Unduh BlankOn Linux Sinambung',
       subtitle:
-        'Unduh image live BlankOn Linux terbaru untuk arsitektur amd64.',
+        'Unduh image live BlankOn Linux Sinambung terbaru untuk arsitektur amd64.',
       dailyBuildWarning:
-        'Ini adalah jahitan harian (daily build). Mungkin mengandung bug, fitur yang belum stabil, atau bahkan tidak dapat di-boot sama sekali.',
+        'Ini adalah ISO jahitan harian (daily build). Mungkin mengandung bug, fitur yang belum stabil, atau bahkan tidak dapat di-boot sama sekali.',
       dailyBuildContribute:
         'Namun, memakai image ini berarti Anda berkesempatan untuk ikut berkontribusi: mengujinya dan melaporkan setiap temuan atau masalah.',
       dailyBuildRepo:
-        'Berbeda dengan ISO rilis bergulir, image ini mengarah ke lumbung paket arsip-dev.blankonlinux.id, yang mungkin kurang stabil dibandingkan arsip.blankonlinux.id.',
+        'Berbeda dengan ISO rilis bergulir yang sudah dipoles dan diuji, image ini mengarah ke lumbung paket arsip-dev.blankonlinux.id, yang mungkin kurang stabil dibandingkan arsip.blankonlinux.id.',
       zsync: 'Zsync',
       zsyncNote:
         'Jika ingin terus mengikuti jahitan harian, Anda dapat memakai perintah zsync berikut untuk menghemat bandwidth.',
@@ -378,10 +381,11 @@ const translations = {
           text: 'Utian Ayuba membuka diskusi berjudul "Mau Dibawa Ke Mana BlankOn Linux?" di grup Telegram BlankOn.',
         },
       ],
-      getInvolvedTitle: 'Bergabunglah',
+      getInvolvedTitle: 'Mari Bergabung',
       getInvolvedDescription:
         'Bergabunglah dengan grup Telegram kami untuk mengikuti perkembangan dan berkontribusi.',
       joinTelegram: 'Gabung Telegram',
+      howToContribute: 'Cara berkontribusi',
     },
   },
   en: {
@@ -412,23 +416,26 @@ const translations = {
       ctaEngage: 'Engage',
       ctaContribute: 'Contribute',
       ctaDonate: 'Donate',
-      credit:
-        'BlankOn Linux Sinambung is brought to you by the BlankOn Revival Project team.',
-      creditLink: 'See more',
+      // Broken where it should wrap, rather than wherever the width lands.
+      credit: [
+        'BlankOn Linux Sinambung is brought to you by',
+        'the BlankOn Revival Project team.',
+      ],
+      creditLink: 'Learn more',
     },
     downloadPage: {
-      title: 'Download BlankOn Linux',
+      title: 'Download BlankOn Linux Sinambung',
       subtitle:
-        'Get the latest BlankOn Linux live image for amd64 architecture.',
+        'Get the latest BlankOn Linux Sinambung live image for amd64 architecture.',
       dailyBuildWarning:
-        'This is a daily stitch (daily build). It may contain bugs, unstable features, or may not even boot at all.',
+        'This is a daily build ISO. It may contain bugs, unstable features, or may not even boot at all.',
       dailyBuildContribute:
         'Using this build, though, is a chance to contribute: test it and report anything you find.',
       dailyBuildRepo:
-        'Unlike the rolling release ISO, this image points at the arsip-dev.blankonlinux.id package repository, which may be less stable than arsip.blankonlinux.id.',
+        'Unlike the polished and tested rolling release ISO, this image points at the arsip-dev.blankonlinux.id package repository, which may be less stable than arsip.blankonlinux.id.',
       zsync: 'Zsync',
       zsyncNote:
-        'If you want to keep following the daily stitch, you can use this zsync command to save bandwidth.',
+        'If you want to keep following the daily build, you can use this zsync command to save bandwidth.',
       downloadButton: 'Download ISO',
       fileDetails: 'File Details',
       filename: 'Filename',
@@ -436,7 +443,7 @@ const translations = {
       type: 'File Type',
       typeValue: 'Live Image (Hybrid ISO)',
       releaseType: 'Release',
-      releaseTypeValue: 'Daily Stitch',
+      releaseTypeValue: 'Daily Build',
       rollingTab: 'Rolling Release ISO',
       developmentTab: 'Development ISO',
       rollingReleaseValue: 'Rolling Release',
@@ -593,6 +600,7 @@ const translations = {
       getInvolvedDescription:
         'Join our Telegram group to follow the progress and contribute.',
       joinTelegram: 'Join Telegram',
+      howToContribute: 'How to contribute',
     },
   },
 }

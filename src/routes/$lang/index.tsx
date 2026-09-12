@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { HomeLayout } from 'fumadocs-ui/layouts/home'
 import LaptopScroll from '@/components/laptop-scroll'
+import SiteFooter from '@/components/site-footer'
 import { baseOptions, getTranslations } from '@/lib/layout.shared'
 
 // The scroll-driven Sinambung teaser. The previous landing page is still at
@@ -34,6 +35,7 @@ function Home() {
           donateUrl: DONATE_URL,
         }}
       />
+      <SiteFooter lang={lang} />
     </HomeLayout>
   )
 }

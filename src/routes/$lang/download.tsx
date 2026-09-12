@@ -3,6 +3,7 @@ import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock'
 import { HomeLayout } from 'fumadocs-ui/layouts/home'
 import { useState } from 'react'
 import { baseOptions, getTranslations } from '@/lib/layout.shared'
+import SiteFooter from '@/components/site-footer'
 
 export const Route = createFileRoute('/$lang/download')({ component: Download })
 
@@ -33,41 +34,6 @@ function DownloadIcon({ className }: { className: string }) {
         d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 4v11"
       />
     </svg>
-  )
-}
-
-function ScreenshotLightbox() {
-  const [open, setOpen] = useState(false)
-
-  return (
-    <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        // Square corners: a radius here clips the screenshot's own corners.
-        className="mt-8 w-full cursor-zoom-in overflow-hidden border border-fd-border focus:outline-none"
-      >
-        <img
-          src="/screenshot.png"
-          alt="BlankOn screenshot"
-          className="w-full object-cover transition-transform duration-300 hover:scale-105"
-        />
-      </button>
-
-      {open && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
-          onClick={() => setOpen(false)}
-        >
-          <img
-            src="/screenshot.png"
-            alt="BlankOn screenshot"
-            className="max-h-[90vh] max-w-[90vw] object-contain shadow-2xl"
-            onClick={() => setOpen(false)}
-          />
-        </div>
-      )}
-    </>
   )
 }
 
@@ -199,8 +165,6 @@ function Download() {
         <h1 className="text-3xl font-bold">{d.title}</h1>
         <p className="mt-3 text-fd-muted-foreground">{d.subtitle}</p>
 
-        <ScreenshotLightbox />
-
         <div
           role="tablist"
           className="mt-8 flex gap-1 border-b border-fd-border"
@@ -240,17 +204,8 @@ function Download() {
             zsync
           />
         )}
-
-        <div className="mt-10 border-t border-fd-border pt-6 text-sm text-fd-muted-foreground">
-          {d.moreInfo}{' '}
-          <a
-            href={`/${lang}/wiki`}
-            className="font-medium text-fd-primary underline-offset-4 hover:underline"
-          >
-            {d.wikiLink}
-          </a>
-        </div>
       </main>
+      <SiteFooter lang={lang} />
     </HomeLayout>
   )
 }

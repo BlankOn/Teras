@@ -2,17 +2,36 @@ import { createFileRoute } from '@tanstack/react-router'
 import { HomeLayout } from 'fumadocs-ui/layouts/home'
 import { useState } from 'react'
 import { baseOptions, getTranslations } from '@/lib/layout.shared'
+import SiteFooter from '@/components/site-footer'
 import contributorsData from '@/contributors.json'
 
 export const Route = createFileRoute('/$lang/team')({ component: Team })
 
+const CONTRIBUTE_URL = 'https://blankonlinux.id/en/wiki/howtocontribute'
+
+// The pill the home page closes with, in theme tokens rather than the hero's
+// fixed dark palette.
+const CTA_CLASS =
+  'inline-flex min-w-[9.5rem] items-center justify-center rounded-full border border-fd-border bg-fd-card px-8 py-4 text-base font-medium text-fd-foreground transition hover:-translate-y-px hover:border-fd-primary/50 hover:bg-fd-accent max-sm:w-full'
+
 const avatarColors = [
-  '#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b',
-  '#10b981', '#06b6d4', '#6366f1', '#e11d48',
+  '#3b82f6',
+  '#8b5cf6',
+  '#ec4899',
+  '#f59e0b',
+  '#10b981',
+  '#06b6d4',
+  '#6366f1',
+  '#e11d48',
 ]
 
 function getInitials(name: string) {
-  return name.split(' ').slice(0, 2).map((w) => w[0]).join('').toUpperCase()
+  return name
+    .split(' ')
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join('')
+    .toUpperCase()
 }
 
 function getColor(name: string) {
@@ -78,7 +97,11 @@ function Team() {
                   {member.name}
                 </p>
                 <p className="text-sm text-fd-muted-foreground">
-                  {member.contribution[lang as keyof typeof member.contribution]}
+                  {
+                    member.contribution[
+                      lang as keyof typeof member.contribution
+                    ]
+                  }
                 </p>
               </a>
             ))}
@@ -91,16 +114,29 @@ function Team() {
           <p className="mb-8 text-fd-muted-foreground">
             {t.homepage.getInvolvedDescription}
           </p>
-          <a
-            href="https://t.me/BlankOnLinux"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex h-10 items-center justify-center rounded-md bg-fd-primary px-6 text-sm font-medium text-fd-primary-foreground transition-colors hover:bg-fd-primary/90"
-          >
-            {t.homepage.joinTelegram}
-          </a>
+          {/* The pair reads as one row, like the calls to action closing the
+              home page - same pill, in the page's own palette. */}
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <a
+              href="https://t.me/BlankOnLinux"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={CTA_CLASS}
+            >
+              {t.homepage.joinTelegram}
+            </a>
+            <a
+              href={CONTRIBUTE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={CTA_CLASS}
+            >
+              {t.homepage.howToContribute}
+            </a>
+          </div>
         </div>
       </main>
+      <SiteFooter lang={lang} />
     </HomeLayout>
   )
 }

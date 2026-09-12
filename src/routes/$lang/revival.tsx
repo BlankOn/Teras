@@ -3,6 +3,7 @@ import { HomeLayout } from 'fumadocs-ui/layouts/home'
 import { ChevronDown, ExternalLink } from 'lucide-react'
 import { useState } from 'react'
 import { baseOptions, getTranslations } from '@/lib/layout.shared'
+import SiteFooter from '@/components/site-footer'
 import { cn } from '@/lib/cn'
 
 export const Route = createFileRoute('/$lang/revival')({ component: Revival })
@@ -332,6 +333,7 @@ function Revival() {
           </ol>
         </section>
       </main>
+      <SiteFooter lang={lang} />
     </HomeLayout>
   )
 }
