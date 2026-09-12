@@ -184,7 +184,8 @@ const translations = {
     downloadDesc: 'Halaman unduh BlankOn',
     sneakPeek: {
       heroTitle: 'Menghadirkan BlankOn Linux Sinambung',
-      heroTagline: 'Distro Linux rilis bergulir berbasis Debian.',
+      heroTagline:
+        'Distro Linux rilis bergulir berbasis Debian. Namanya diambil dari kata sinambung, seperti dalam berkesinambungan: berlanjut tanpa terputus.',
       scrollHint: 'Gulir ke bawah \u2193',
       panel2Title: 'Pembaruan Paling Mutakhir',
       panel2Body:
@@ -399,7 +400,8 @@ const translations = {
     downloadDesc: 'BlankOn download page',
     sneakPeek: {
       heroTitle: 'Unleashing BlankOn Linux Sinambung',
-      heroTagline: 'A rolling release Linux distro based on Debian.',
+      heroTagline:
+        'A rolling release Linux distro based on Debian. Its name comes from the Indonesian sinambung, as in berkesinambungan: continuity, carrying on without a break.',
       scrollHint: 'Scroll down \u2193',
       panel2Title: 'Bleeding Edge Updates',
       panel2Body:
