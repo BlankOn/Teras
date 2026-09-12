@@ -215,6 +215,9 @@ const translations = {
         'Namun, memakai image ini berarti Anda berkesempatan untuk ikut berkontribusi: mengujinya dan melaporkan setiap temuan atau masalah.',
       dailyBuildRepo:
         'Berbeda dengan ISO rilis bergulir, image ini mengarah ke lumbung paket arsip-dev.blankonlinux.id, yang mungkin kurang stabil dibandingkan arsip.blankonlinux.id.',
+      zsync: 'Zsync',
+      zsyncNote:
+        'Jika ingin terus mengikuti jahitan harian, Anda dapat memakai perintah zsync berikut untuk menghemat bandwidth.',
       downloadButton: 'Unduh ISO',
       fileDetails: 'Detail Berkas',
       filename: 'Nama Berkas',
@@ -423,6 +426,9 @@ const translations = {
         'Using this build, though, is a chance to contribute: test it and report anything you find.',
       dailyBuildRepo:
         'Unlike the rolling release ISO, this image points at the arsip-dev.blankonlinux.id package repository, which may be less stable than arsip.blankonlinux.id.',
+      zsync: 'Zsync',
+      zsyncNote:
+        'If you want to keep following the daily stitch, you can use this zsync command to save bandwidth.',
       downloadButton: 'Download ISO',
       fileDetails: 'File Details',
       filename: 'Filename',

@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock'
 import { HomeLayout } from 'fumadocs-ui/layouts/home'
 import { useState } from 'react'
 import { baseOptions, getTranslations } from '@/lib/layout.shared'
@@ -14,6 +15,7 @@ const DEVELOPMENT_ISO_URL =
 const ISO_FILENAME = 'blankon-live-image-amd64.hybrid.iso'
 
 const sha256sumUrl = (isoUrl: string) => `${isoUrl}.sha256sum`
+const zsyncUrl = (isoUrl: string) => `${isoUrl}.zsync`
 
 function DownloadIcon({ className }: { className: string }) {
   return (
@@ -76,19 +78,22 @@ function ReleasePanel({
   isoUrl,
   releaseValue,
   warning,
+  zsync,
 }: {
   d: ReturnType<typeof getTranslations>['downloadPage']
   isoUrl: string
   releaseValue: string
   warning?: string
+  // Only the build that moves every day is worth following with zsync.
+  zsync?: boolean
 }) {
   return (
     <>
       {warning && (
         <div className="mt-6 space-y-2 rounded-lg border border-yellow-400/40 bg-yellow-400/10 px-4 py-3 text-sm text-yellow-700 dark:text-yellow-300">
           <p>{warning}</p>
-          <p>{d.dailyBuildContribute}</p>
           <p>{d.dailyBuildRepo}</p>
+          <p>{d.dailyBuildContribute}</p>
         </div>
       )}
 
@@ -153,6 +158,25 @@ function ReleasePanel({
           {d.checksumNote}
         </p>
       </div>
+
+      {zsync && (
+        <div className="mt-8">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-fd-muted-foreground">
+            {d.zsync}
+          </h2>
+          <p className="text-sm text-fd-muted-foreground">{d.zsyncNote}</p>
+          {/* The wiki's own code block, so the command gets the same copy
+              button - and scrolls in place rather than wrapping mid-URL. */}
+          <CodeBlock className="mt-3">
+            {/* The viewport only pads top and bottom - in the wiki the sides
+                are padded by the highlighted line itself, which plain text
+                has none of. */}
+            <Pre>
+              <code className="px-4">zsync {zsyncUrl(isoUrl)}</code>
+            </Pre>
+          </CodeBlock>
+        </div>
+      )}
     </>
   )
 }
@@ -213,6 +237,7 @@ function Download() {
             isoUrl={DEVELOPMENT_ISO_URL}
             releaseValue={d.releaseTypeValue}
             warning={d.dailyBuildWarning}
+            zsync
           />
         )}
 
