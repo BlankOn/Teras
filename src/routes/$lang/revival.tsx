@@ -7,6 +7,210 @@ import { cn } from '@/lib/cn'
 
 export const Route = createFileRoute('/$lang/revival')({ component: Revival })
 
+/*
+ * The revival closed on 12 September 2026, so the roll of honour below is a
+ * frozen record of who saw it through - deliberately its own copy of the
+ * names rather than a read of src/contributors.json or a link to /team, both
+ * of which go on changing. It merges the revival contributors with the
+ * BlankOn Foundation team (blankon.id/en/team); anyone in both carries both
+ * roles.
+ */
+// The foundation's own portraits, served from blankon.id, and the page they
+// come from - the people carried over from there have no GitHub account to
+// point at.
+const FOUNDATION_URL = 'https://blankon.id/en/team'
+
+const ROSTER: Array<{
+  name: string
+  github?: string
+  avatar?: string
+  url?: string
+  role: { id: string; en: string }
+}> = [
+  {
+    name: 'Akhmat Safrudin',
+    avatar: 'https://blankon.id/images/akhmat-safrudin.png',
+    url: FOUNDATION_URL,
+    role: { id: 'Pengawas Yayasan', en: 'Foundation Supervisor' },
+  },
+  {
+    name: 'Aris Fathur Rahman',
+    github: 'ar1sfr',
+    role: { id: 'Riset dan Pengembangan', en: 'Research and Development' },
+  },
+  {
+    name: 'Atqa Munzir Zakaria',
+    github: 'atqamz',
+    role: { id: 'Riset dan Pengembangan', en: 'Research and Development' },
+  },
+  {
+    name: 'Firmansyah Dzakwan Arifien',
+    github: 'FirmansyahDzakwanArifien',
+    role: { id: 'Infrastruktur', en: 'Infrastructure' },
+  },
+  {
+    name: 'Hanhan Husna',
+    github: 'hahn',
+    role: { id: 'Pemelihara Paket', en: 'Package Maintainer' },
+  },
+  {
+    name: 'Harry Suryapambagya',
+    github: 'harsxv',
+    role: { id: 'Infrastruktur', en: 'Infrastructure' },
+  },
+  {
+    name: 'Herpiko Dwi Aguno',
+    github: 'herpiko',
+    role: {
+      id: 'Direktur Eksekutif Yayasan · Pemelihara Paket',
+      en: 'Foundation Executive Director · Package Maintainer',
+    },
+  },
+  {
+    name: 'Iwan stwn',
+    avatar: 'https://blankon.id/images/iwan.png',
+    url: FOUNDATION_URL,
+    role: { id: 'Manajer Program Yayasan', en: 'Foundation Program Manager' },
+  },
+  {
+    name: 'Lucky Mahendra Purba',
+    github: 'luckynee',
+    role: { id: 'Pemelihara Paket', en: 'Package Maintainer' },
+  },
+  {
+    name: 'Mohammad Raska',
+    github: 'Adekabang',
+    role: { id: 'Pemelihara Paket', en: 'Package Maintainer' },
+  },
+  {
+    name: 'Raffi Febriandika Utama',
+    github: 'raffifu',
+    role: { id: 'Pemelihara Paket', en: 'Package Maintainer' },
+  },
+  {
+    name: 'Rusmanto',
+    avatar: 'https://blankon.id/images/rusmanto.jpg',
+    url: FOUNDATION_URL,
+    role: { id: 'Penasihat Yayasan', en: 'Foundation Advisor' },
+  },
+  {
+    name: 'Sistiandy Syahbana Nugraha',
+    github: 'siscms',
+    role: { id: 'Hubungan Masyarakat', en: 'Public Relation' },
+  },
+]
+
+const avatarColors = [
+  '#3b82f6',
+  '#8b5cf6',
+  '#ec4899',
+  '#f59e0b',
+  '#10b981',
+  '#06b6d4',
+  '#6366f1',
+  '#e11d48',
+]
+
+function getInitials(name: string) {
+  return name
+    .split(' ')
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join('')
+    .toUpperCase()
+}
+
+function getColor(name: string) {
+  let hash = 0
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash)
+  }
+  return avatarColors[Math.abs(hash) % avatarColors.length]
+}
+
+function MemberAvatar({
+  name,
+  github,
+  avatar,
+}: {
+  name: string
+  github?: string
+  avatar?: string
+}) {
+  const [failed, setFailed] = useState(false)
+  const src =
+    avatar ?? (github ? `https://github.com/${github}.png?size=256` : '')
+
+  if (!src || failed) {
+    return (
+      <div
+        className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full text-2xl font-bold text-white"
+        style={{ backgroundColor: getColor(name) }}
+      >
+        {getInitials(name)}
+      </div>
+    )
+  }
+
+  return (
+    <img
+      // The image can fail before hydration attaches onError, which would
+      // leave the alt text spilling out of the circle; catch that on mount too.
+      ref={(node) => {
+        if (node?.complete && node.naturalWidth === 0) setFailed(true)
+      }}
+      src={src}
+      alt={name}
+      className="h-24 w-24 shrink-0 rounded-full bg-fd-border object-cover"
+      loading="lazy"
+      onError={() => setFailed(true)}
+    />
+  )
+}
+
+function Member({
+  member,
+  lang,
+}: {
+  member: (typeof ROSTER)[number]
+  lang: string
+}) {
+  const body = (
+    <>
+      <MemberAvatar
+        name={member.name}
+        github={member.github}
+        avatar={member.avatar}
+      />
+      <p className="mt-3 text-base font-medium text-fd-foreground">
+        {member.name}
+      </p>
+      <p className="text-sm text-fd-muted-foreground">
+        {member.role[lang as keyof typeof member.role]}
+      </p>
+    </>
+  )
+  const className = 'flex flex-col items-center rounded-xl p-4 text-center'
+
+  // GitHub for the contributors, the foundation's own team page for the
+  // people carried over from it.
+  const href =
+    member.url ?? (member.github && `https://github.com/${member.github}`)
+
+  return href ? (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={cn(className, 'transition-colors hover:bg-fd-accent')}
+    >
+      {body}
+    </a>
+  ) : (
+    <div className={className}>{body}</div>
+  )
+}
+
 // Long raw URLs wrap badly on phones; show the host instead and keep the full
 // address in the link's title.
 function linkLabel(url: string) {
@@ -59,6 +263,24 @@ function Revival() {
           </p>
         </section>
 
+        {/* The revival is done: the notice, and the people who did it. */}
+        <section className="mx-auto w-full max-w-3xl px-4">
+          <div className="rounded-lg border border-yellow-400/40 bg-yellow-400/10 px-4 py-3 text-sm text-yellow-700 dark:text-yellow-300">
+            {t.homepage.revivalComplete}
+          </div>
+        </section>
+
+        <section className="mx-auto w-full max-w-4xl px-4 py-16">
+          <h2 className="mb-8 text-center text-2xl font-semibold">
+            {t.homepage.teamTitle}
+          </h2>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {ROSTER.map((member) => (
+              <Member key={member.name} member={member} lang={lang} />
+            ))}
+          </div>
+        </section>
+
         {/* FAQ Section */}
         <section className="mx-auto max-w-3xl px-4 py-16">
           <h2 className="mb-8 text-center text-2xl font-semibold">
@@ -73,7 +295,10 @@ function Revival() {
             <FAQItem question={t.homepage.faq.q7} answer={t.homepage.faq.a7} />
             <FAQItem question={t.homepage.faq.q8} answer={t.homepage.faq.a8} />
             <FAQItem question={t.homepage.faq.q9} answer={t.homepage.faq.a9} />
-            <FAQItem question={t.homepage.faq.q10} answer={t.homepage.faq.a10} />
+            <FAQItem
+              question={t.homepage.faq.q10}
+              answer={t.homepage.faq.a10}
+            />
           </div>
         </section>
 
@@ -106,7 +331,6 @@ function Revival() {
             ))}
           </ol>
         </section>
-
       </main>
     </HomeLayout>
   )

@@ -15,6 +15,8 @@ import type * as THREE_NS from 'three'
 const MODEL_URL = '/laptop/mac-noUv.glb'
 const KEYBOARD_URL = '/laptop/keyboard-overlay.png'
 const SCREEN_IMAGE = '/screenshot.png'
+// Boni, the BlankOn mascot, who closes the page.
+const BONI_IMAGE = '/boni-pose-3.png'
 
 const SCREEN_SIZE = [29.4, 20] // model units
 
@@ -27,15 +29,24 @@ const LID_Z_CLOSED = 0.5
 const YAW_START = (45 * Math.PI) / 180
 const YAW_END = (-25 * Math.PI) / 180
 
-// Share of the scroll spent opening the lid.
-const OPEN_END = 0.85
+// Shares of the run-up to stage five, which is where the laptop arrives
+// square to the camera and half pushed in: the lid finishes opening, then it
+// swings back to centre, and the camera starts closing in behind it.
+const OPEN_END = 0.7
+const RECENTRE_START = 0.7
+const ZOOM_START = 0.78
 
 // How lit the panel is the instant it wakes, before the backlight ramps up.
 const DIM = 0.06
 
-// Trailing panels the laptop holds its final pose through; the canvas is
-// released over these so it scrolls away like ordinary content.
-const HOLD_PANELS = 1
+// How far the push in has got by the time stage five arrives, and how close
+// the camera ends up - a share of its resting distance.
+const STAGE5_ZOOM = 0.75
+const ZOOM_FACTOR = 0.3
+
+// Breathing room left around the screen when it is framed at stage five, so
+// the panel never runs off the sides of the viewport.
+const SCREEN_MARGIN = 1.12
 
 export interface LaptopScrollCopy {
   heroTitle: string
@@ -45,11 +56,20 @@ export interface LaptopScrollCopy {
   panel2Body: string
   panel3Title: string
   panel3Body: string
+  panel4Title: string
+  panel4Body: string
+  prayaUrl: string
+  prayaLearnMoreUrl: string
   learnMore: string
   learnMoreUrl: string
   comingSoon: string
-  cta: string
+  ctaDownload: string
+  ctaEngage: string
+  ctaContribute: string
+  ctaDonate: string
   ctaUrl: string
+  contributeUrl: string
+  donateUrl: string
   credit: string
   creditLink: string
 }
@@ -65,6 +85,7 @@ export default function LaptopScroll({
   const introRef = useRef<HTMLElement>(null)
   const hintRef = useRef<HTMLParagraphElement>(null)
   const finaleRef = useRef<HTMLDivElement>(null)
+  const prayaRef = useRef<HTMLElement>(null)
   const rootRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -72,8 +93,10 @@ export default function LaptopScroll({
     const intro = introRef.current
     const hint = hintRef.current
     const finale = finaleRef.current
+    const prayaSection = prayaRef.current
     const root = rootRef.current
-    if (!container || !intro || !hint || !finale || !root) return
+    if (!container || !intro || !hint || !finale || !prayaSection || !root)
+      return
 
     // The site header sits above the hero and is part of the flow, so a full
     // 100svh first panel hangs its content below the fold. Take the header
@@ -213,6 +236,9 @@ export default function LaptopScroll({
 
         const img = new Image()
         img.onload = () => {
+          // Fitted, not stretched: the panel is 3:2-ish and the screenshot
+          // 16:9, so it is drawn as large as it goes with its proportions
+          // intact and the panel's own black either side of it.
           const s = Math.min(c.width / img.width, c.height / img.height)
           const w = img.width * s
           const h = img.height * s
@@ -295,9 +321,13 @@ export default function LaptopScroll({
       // The model ships without UVs, so the lit screen and the keys are added
       // as textured planes on top of it.
       let screenLight: THREE_NS.RectAreaLight
+      // The lit panel, and its world position - what the closing zoom flies
+      // into.
+      let screenMesh: THREE_NS.Mesh
+      const screenCentre = new THREE.Vector3(0, 1.5, 0)
 
       const addScreen = () => {
-        const screenMesh = new THREE.Mesh(
+        screenMesh = new THREE.Mesh(
           new THREE.PlaneGeometry(SCREEN_SIZE[0], SCREEN_SIZE[1]),
           screenMaterial,
         )
@@ -365,48 +395,54 @@ export default function LaptopScroll({
       let current = 0
       let ready = false
 
+      // Measured against the hero's own box, since the site header sits above
+      // it and the page may carry more below. The one keyframe - the laptop
+      // arriving centred and three quarters pushed in for stage five - is
+      // read off the layout rather than hard-coded, so the panel heights stay
+      // free to change.
+      let animStart = 0
+      let animSpan = 1
+      let prayaStart = 0.7
+
+      const measure = () => {
+        const docTop = (el: HTMLElement) =>
+          el.getBoundingClientRect().top + window.scrollY
+
+        animStart = docTop(root)
+        animSpan = Math.max(root.offsetHeight - window.innerHeight, 1)
+        prayaStart = THREE.MathUtils.clamp(
+          (docTop(prayaSection) - animStart) / animSpan,
+          0.2,
+          0.9,
+        )
+      }
+
       const readScroll = () => {
         const y = window.scrollY
 
-        // Measured against the hero's own box, since the site header sits
-        // above it and the page may carry more below.
-        const start = root.offsetTop
-        const span = root.offsetHeight - window.innerHeight
-
-        // The pose runs out before the held panel, then stays put.
-        const animMax =
-          start + Math.max(span - window.innerHeight * HOLD_PANELS, 1)
-        target = THREE.MathUtils.clamp(
-          (y - start) / Math.max(animMax - start, 1),
-          0,
-          1,
-        )
-
-        // Once the pose is done the pinned canvas is released: it travels up
-        // 1:1 with the scroll, so the laptop leaves the viewport like ordinary
-        // content and the closing panel arrives free of the parallax.
-        const holdPx = THREE.MathUtils.clamp(
-          y - animMax,
-          0,
-          window.innerHeight * HOLD_PANELS,
-        )
-        container.style.transform = holdPx ? `translateY(${-holdPx}px)` : ''
+        target = THREE.MathUtils.clamp((y - animStart) / animSpan, 0, 1)
 
         // The hint has done its job the moment the page starts moving.
         hint.style.opacity = (
           1 -
-          THREE.MathUtils.smoothstep((y - start) / window.innerHeight, 0, 0.4)
-        ).toFixed(3)
-
-        const hold = holdPx / (window.innerHeight * HOLD_PANELS)
-        finale.style.opacity = THREE.MathUtils.smoothstep(
-          hold,
-          0.15,
-          0.6,
+          THREE.MathUtils.smoothstep(
+            (y - animStart) / window.innerHeight,
+            0,
+            0.4,
+          )
         ).toFixed(3)
 
         needsRender = true
       }
+
+      // The resting camera, and the two distances the push in works to:
+      // `frameDist` is as close as it can get with the whole screen still on
+      // screen - that is the stage five pose - and `diveDist` is the dive
+      // past it that plays out under the fade.
+      let baseDist = 11
+      let baseHeight = 1.5
+      let frameDist = 6
+      let diveDist = 3.3
 
       const resize = () => {
         const w = container.clientWidth
@@ -418,24 +454,65 @@ export default function LaptopScroll({
 
         // Pull back (and lift slightly) on narrow/portrait viewports so the
         // laptop fits.
-        const dist = THREE.MathUtils.clamp(
+        baseDist = THREE.MathUtils.clamp(
           11 / Math.min(camera.aspect, 1.6),
           11,
           20,
         )
-        camera.position.set(0, 1.5 + (dist - 11) * 0.12, dist)
+        baseHeight = 1.5 + (baseDist - 11) * 0.12
+
+        // How close the camera can come before the panel runs off the
+        // viewport: the distance at which the screen, plus a margin, still
+        // fits both the vertical field of view and the horizontal one.
+        const halfW = (SCREEN_SIZE[0] * macGroup.scale.x) / 2
+        const halfH = (SCREEN_SIZE[1] * macGroup.scale.y) / 2
+        const tanHalfFov = Math.tan((camera.fov * Math.PI) / 360)
+        frameDist = Math.min(
+          Math.max(
+            (halfH * SCREEN_MARGIN) / tanHalfFov,
+            (halfW * SCREEN_MARGIN) / (tanHalfFov * camera.aspect),
+          ),
+          baseDist,
+        )
+        // The dive never backs away from the framed pose, however tight that
+        // pose had to be on a narrow viewport.
+        diveDist = Math.min(baseDist * ZOOM_FACTOR, frameDist * 0.62)
+
+        camera.position.set(0, baseHeight, baseDist)
         camera.lookAt(lookAt)
         camera.updateProjectionMatrix()
+        measure()
         needsRender = true
       }
 
       const applyPose = (p: number) => {
-        const open = easeInOut(THREE.MathUtils.clamp(p / OPEN_END, 0, 1))
+        // The run-up covers everything up to stage five; the tail carries
+        // straight on from there without a pause - still pushing in, and now
+        // fading out too.
+        const lead = THREE.MathUtils.clamp(p / prayaStart, 0, 1)
+        const tail = THREE.MathUtils.clamp(
+          (p - prayaStart) / Math.max(1 - prayaStart, 0.0001),
+          0,
+          1,
+        )
+        const open = easeInOut(THREE.MathUtils.clamp(lead / OPEN_END, 0, 1))
 
+        // Once the lid is open the laptop swings back square to the camera,
+        // so stage five reads the screen head-on.
+        const swing = easeInOut(
+          THREE.MathUtils.clamp(lead / RECENTRE_START, 0, 1),
+        )
+        const recentre = easeInOut(
+          THREE.MathUtils.clamp(
+            (lead - RECENTRE_START) / (1 - RECENTRE_START),
+            0,
+            1,
+          ),
+        )
         macGroup.rotation.y = THREE.MathUtils.lerp(
-          YAW_START,
-          YAW_END,
-          easeInOut(p),
+          THREE.MathUtils.lerp(YAW_START, YAW_END, swing),
+          0,
+          recentre,
         )
         lidGroup.rotation.x = THREE.MathUtils.lerp(LID_CLOSED, LID_OPEN, open)
         lidGroup.position.z = THREE.MathUtils.lerp(
@@ -453,6 +530,50 @@ export default function LaptopScroll({
         const backlight = THREE.MathUtils.smoothstep(open, 0.1, 1)
         screenMaterial.color.setScalar(THREE.MathUtils.lerp(DIM, 1, backlight))
         screenLight.intensity = backlight * 1.5
+
+        // The camera closes in behind the swing, so the laptop reaches stage
+        // five three quarters pushed in and at full opacity; from there the
+        // scroll keeps it coming while the scene - laptop, floor and all -
+        // fades out from under it, leaving the closing panel on a clean
+        // ground.
+        const zoom =
+          STAGE5_ZOOM * THREE.MathUtils.smoothstep(lead, ZOOM_START, 1) +
+          (1 - STAGE5_ZOOM) * THREE.MathUtils.smoothstep(tail, 0, 0.85)
+        if (zoom > 0) {
+          macGroup.updateMatrixWorld(true)
+          screenCentre.setFromMatrixPosition(screenMesh.matrixWorld)
+        }
+        // Up to stage five the camera closes to the framed pose and squares
+        // up on the middle of the screen; past it, it dives through.
+        const framed = THREE.MathUtils.clamp(zoom / STAGE5_ZOOM, 0, 1)
+        const dive = THREE.MathUtils.clamp(
+          (zoom - STAGE5_ZOOM) / (1 - STAGE5_ZOOM),
+          0,
+          1,
+        )
+        lookAt.set(0, THREE.MathUtils.lerp(0.95, screenCentre.y, framed), 0)
+        camera.position.set(
+          0,
+          THREE.MathUtils.lerp(baseHeight, screenCentre.y, framed),
+          THREE.MathUtils.lerp(
+            THREE.MathUtils.lerp(baseDist, frameDist, framed),
+            diveDist,
+            dive,
+          ),
+        )
+        camera.lookAt(lookAt)
+
+        // Gone well before the bottom of the scroll, so the closing panel has
+        // the page to itself rather than sharing it with a ghost of the
+        // scene.
+        container.style.opacity = (
+          1 - THREE.MathUtils.smoothstep(tail, 0.15, 0.8)
+        ).toFixed(3)
+        finale.style.opacity = THREE.MathUtils.smoothstep(
+          tail,
+          0.5,
+          0.85,
+        ).toFixed(3)
       }
 
       let frame = 0
@@ -493,7 +614,13 @@ export default function LaptopScroll({
         applyPose(current)
 
         ready = true
-        container.style.opacity = '1'
+        // The reveal is a CSS transition - applyPose has already set the
+        // opacity, which starts it. The closing fade is scroll-driven, so the
+        // transition is dropped once the reveal has had its time.
+        const revealed = window.setTimeout(() => {
+          container.style.transition = 'none'
+        }, 800)
+        cleanups.push(() => clearTimeout(revealed))
 
         window.addEventListener('scroll', readScroll, { passive: true })
         window.addEventListener('resize', onResize)
@@ -590,21 +717,81 @@ export default function LaptopScroll({
           </Card>
         </Panel>
 
-        <section className="flex min-h-[100svh] items-center justify-center px-[8vw] text-center">
-          <div ref={finaleRef} className="opacity-0">
-            <p className="mb-7 text-[clamp(26px,4.6vw,42px)] tracking-[-0.01em]">
-              {copy.comingSoon}
+        {/* Stage five: the laptop has arrived square to the camera and half
+            pushed in, so the card sits low and centred under it rather than
+            out in the left column. */}
+        <section
+          ref={prayaRef}
+          className="flex min-h-[70svh] items-end justify-center px-[8vw] pb-[6vh]"
+        >
+          <Card className="text-center">
+            <h2 className="mb-2.5 text-[clamp(20px,3.4vw,30px)] font-bold leading-[1.15] tracking-[-0.02em]">
+              {copy.panel4Title}
+            </h2>
+            <p className="text-[#a7adba]">
+              {linkName(copy.panel4Body, 'Praya', copy.prayaUrl)}
             </p>
             <a
-              href={copy.ctaUrl}
+              href={copy.prayaLearnMoreUrl}
               target="_blank"
               rel="noopener noreferrer"
               // The panels ignore the pointer so they never block the canvas;
-              // the one interactive element opts back in.
-              className="pointer-events-auto inline-block rounded-full border border-white/15 bg-white/5 px-6 py-3 text-[15px] text-[#e7e9ee] transition hover:-translate-y-px hover:border-[#7aa8ff]/50 hover:bg-[#7aa8ff]/15"
+              // links opt back in.
+              className="pointer-events-auto mt-4 inline-block text-[15px] text-[#7aa8ff] underline-offset-4 hover:underline"
             >
-              {copy.cta}
+              {copy.learnMore} &rarr;
             </a>
+          </Card>
+        </section>
+
+        {/* No copy here: it is the scroll room the camera needs to finish
+            pushing in and fade the scene out. */}
+        <section aria-hidden className="min-h-[90svh]" />
+
+        <section className="flex min-h-[100svh] items-center justify-center px-[8vw] text-center">
+          <div ref={finaleRef} className="opacity-0">
+            {/* Boni closes the page in place of the line of copy, which
+                carries on as the alt text. */}
+            <img
+              src={BONI_IMAGE}
+              alt={copy.comingSoon}
+              className="mx-auto mb-7 h-[clamp(170px,30vh,300px)] w-auto"
+            />
+            {/* The three ways in. They stack on a narrow viewport rather
+                than shrinking to fit. */}
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <Link
+                to="/$lang/download"
+                params={{ lang }}
+                className={CTA_CLASS}
+              >
+                {copy.ctaDownload}
+              </Link>
+              <a
+                href={copy.ctaUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={CTA_CLASS}
+              >
+                {copy.ctaEngage}
+              </a>
+              <a
+                href={copy.contributeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={CTA_CLASS}
+              >
+                {copy.ctaContribute}
+              </a>
+              <a
+                href={copy.donateUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={CTA_CLASS}
+              >
+                {copy.ctaDonate}
+              </a>
+            </div>
 
             <p className="mx-auto mt-8 max-w-[46ch] text-[13px] leading-relaxed text-[#6f7684]">
               {italiciseName(copy.credit)}{' '}
@@ -623,6 +810,33 @@ export default function LaptopScroll({
   )
 }
 
+// The closing calls to action. The panels ignore the pointer so they never
+// block the canvas; these opt back in.
+const CTA_CLASS =
+  'pointer-events-auto min-w-[9.5rem] rounded-full border border-white/15 bg-white/5 px-8 py-4 text-[17px] font-medium text-[#e7e9ee] transition hover:-translate-y-px hover:border-[#7aa8ff]/50 hover:bg-[#7aa8ff]/15 max-sm:w-full'
+
+// The desktop is named after a town, so the name carries a link out to it
+// wherever the copy mentions it.
+function linkName(text: string, name: string, url: string) {
+  return text.split(new RegExp(`(${name})`, 'g')).map((part, i) =>
+    part === name ? (
+      <a
+        key={i}
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        // The panels ignore the pointer so they never block the canvas; links
+        // opt back in.
+        className="pointer-events-auto text-[#7aa8ff] underline underline-offset-4 decoration-[#7aa8ff]/40 hover:decoration-[#7aa8ff]"
+      >
+        {part}
+      </a>
+    ) : (
+      part
+    ),
+  )
+}
+
 // The product name is set in italic wherever it appears in the copy.
 function italiciseName(text: string) {
   return text
@@ -635,15 +849,23 @@ function Panel({ children }: { children: React.ReactNode }) {
     // Up to 1280px the card sits 8vw from the left edge. Past that it stops
     // drifting outward and holds to a centred 1280px column instead, so on a
     // wide monitor it stays left of the laptop rather than out at the margin.
-    <section className="flex min-h-[100svh] items-center pl-[max(8vw,calc((100vw-1280px)/2+102px))] pr-[8vw] max-md:items-end max-md:pb-[10vh]">
+    <section className="flex min-h-[70svh] items-center pl-[max(8vw,calc((100vw-1280px)/2+102px))] pr-[8vw] max-md:items-end max-md:pb-[10vh]">
       {children}
     </section>
   )
 }
 
-function Card({ children }: { children: React.ReactNode }) {
+function Card({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode
+  className?: string
+}) {
   return (
-    <div className="max-w-[34ch] rounded-2xl border border-white/10 bg-[#0e1013]/55 px-[26px] py-6 backdrop-blur-lg max-md:max-w-full">
+    <div
+      className={`max-w-[34ch] rounded-2xl border border-white/10 bg-[#0e1013]/55 px-[26px] py-6 backdrop-blur-lg max-md:max-w-full ${className}`}
+    >
       {children}
     </div>
   )

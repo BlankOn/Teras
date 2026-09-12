@@ -183,7 +183,7 @@ const translations = {
     welcome: 'Selamat datang di BlankOn',
     downloadDesc: 'Halaman unduh BlankOn',
     sneakPeek: {
-      heroTitle: 'Bocoran: BlankOn Linux Sinambung',
+      heroTitle: 'Menghadirkan BlankOn Linux Sinambung',
       heroTagline: 'Distro Linux rilis bergulir berbasis Debian.',
       scrollHint: 'Gulir ke bawah \u2193',
       panel2Title: 'Pembaruan Paling Mutakhir',
@@ -192,9 +192,15 @@ const translations = {
       panel3Title: 'Dengan Sabuk Pengaman',
       panel3Body:
         'Mekanisme repositori staging dan para kontributor kami menjaga Anda dari liarnya Sid.',
+      panel4Title: 'Memperkenalkan Praya',
+      panel4Body:
+        'Penerus Manokwari Desktop. Praya mewarisi karakter khas Manokwari sekaligus mengikuti perkembangan teknologi modern.',
       learnMore: 'Pelajari lebih lanjut',
       comingSoon: 'Segera hadir\u2026',
-      cta: 'Ikuti perjalanan kami di grup Telegram',
+      ctaDownload: 'Unduh',
+      ctaEngage: 'Bergabung',
+      ctaContribute: 'Berkontribusi',
+      ctaDonate: 'Donasi',
       credit:
         'BlankOn Linux Sinambung dipersembahkan oleh tim BlankOn Revival Project.',
       creditLink: 'Selengkapnya',
@@ -205,6 +211,13 @@ const translations = {
         'Unduh image live BlankOn Linux terbaru untuk arsitektur amd64.',
       dailyBuildWarning:
         'Ini adalah jahitan harian (daily build). Mungkin mengandung bug, fitur yang belum stabil, atau bahkan tidak dapat di-boot sama sekali.',
+      dailyBuildContribute:
+        'Namun, memakai image ini berarti Anda berkesempatan untuk ikut berkontribusi: mengujinya dan melaporkan setiap temuan atau masalah.',
+      dailyBuildRepo:
+        'Berbeda dengan ISO rilis bergulir, image ini mengarah ke lumbung paket arsip-dev.blankonlinux.id, yang mungkin kurang stabil dibandingkan arsip.blankonlinux.id.',
+      zsync: 'Zsync',
+      zsyncNote:
+        'Jika ingin terus mengikuti jahitan harian, Anda dapat memakai perintah zsync berikut untuk menghemat bandwidth.',
       downloadButton: 'Unduh ISO',
       fileDetails: 'Detail Berkas',
       filename: 'Nama Berkas',
@@ -213,6 +226,9 @@ const translations = {
       typeValue: 'Live Image (Hybrid ISO)',
       releaseType: 'Rilis',
       releaseTypeValue: 'Jahitan Harian',
+      rollingTab: 'ISO Rilis Bergulir',
+      developmentTab: 'ISO Pengembangan',
+      rollingReleaseValue: 'Rilis Bergulir',
       checksum: 'SHA256',
       checksumLoading: 'Memuat...',
       checksumError: 'Gagal memuat',
@@ -241,7 +257,9 @@ const translations = {
       aboutTitle: 'Tentang',
       aboutDescription:
         'BlankOn Linux adalah distribusi Linux Indonesia berbasis Debian yang telah menjadi gerakan open-source sejak 2004. Setelah bertahun-tahun tidak aktif, tim baru telah membangun ulang infrastruktur dan merilis ISO pertama yang dapat di-boot dari sistem build IRGSH kami sendiri. Mari unduh, jalankan, dan kembangkan bersama-sama.',
-      teamTitle: 'Tim',
+      teamTitle: 'Tim Revival',
+      revivalComplete:
+        'Per 12 September 2026, upaya revival dinyatakan selesai. Terima kasih kepada seluruh kontributor, donatur, dan sponsor revival, serta komunitas yang masih mempercayai visi kami.',
       sponsorsTitle: 'Sponsor',
       faqTitle: 'Tanya Ini Lagi Itu Lagi (TILIL)',
       faq: {
@@ -268,6 +286,20 @@ const translations = {
       },
       updatesTitle: 'Perkembangan',
       updates: [
+        {
+          date: '2026-09-12',
+          text: 'Release candidate 1 untuk Sinambung dilepas. Tinggal satu langkah lagi menuju rilis final. Hari ini juga kami tandai sebagai selesainya upaya revival.',
+        },
+        {
+          date: '2026-09-11',
+          text: 'arsip-dev.blankonlinux.id telah tersinkron ke arsip.blankonlinux.id. Ini menandai rampungnya seluruh alur kerja dan infrastruktur pengembangan distro.',
+          url: 'https://arsip.blankonlinux.id/',
+        },
+        {
+          date: '2026-09-05',
+          text: 'Kami sedang menjajaki skema rilis bergulir. Nama kode untuk rilis bergulir ini adalah Sinambung, diambil dari kata "berkesinambungan". Baca RFC-nya di sini.',
+          url: 'https://gist.github.com/herpiko/a1cde839af39636c8bc71929dfa709b9/revisions',
+        },
         {
           date: '2026-09-04',
           text: 'Pembaruan besar untuk IRGSH, pabrik paket BlankOn. IRGSH kini mendukung banyak distribusi sekaligus dan dapat mengimpor paket langsung dari sumber lain, terutama untuk mengambil pembaruan paket dan pembaruan keamanan. Pendekatan multi-distribusi ini juga membuka jalan bagi dukungan multi-arsitektur di masa depan.',
@@ -362,7 +394,7 @@ const translations = {
     welcome: 'Welcome to BlankOn',
     downloadDesc: 'BlankOn download page',
     sneakPeek: {
-      heroTitle: 'Sneak Peek: BlankOn Linux Sinambung',
+      heroTitle: 'Unleashing BlankOn Linux Sinambung',
       heroTagline: 'A rolling release Linux distro based on Debian.',
       scrollHint: 'Scroll down \u2193',
       panel2Title: 'Bleeding Edge Updates',
@@ -371,9 +403,15 @@ const translations = {
       panel3Title: 'With Seatbelt',
       panel3Body:
         "Our staging repository mechanism and our contributors are guarding you from Sid's sharp edges.",
+      panel4Title: 'Introducing Praya',
+      panel4Body:
+        "The successor to Manokwari Desktop. Praya inherits Manokwari's unique character while keeping up with a modern tech stack.",
       learnMore: 'Learn more',
       comingSoon: 'Coming soon\u2026',
-      cta: 'Follow our journey in our Telegram group',
+      ctaDownload: 'Download',
+      ctaEngage: 'Engage',
+      ctaContribute: 'Contribute',
+      ctaDonate: 'Donate',
       credit:
         'BlankOn Linux Sinambung is brought to you by the BlankOn Revival Project team.',
       creditLink: 'See more',
@@ -384,6 +422,13 @@ const translations = {
         'Get the latest BlankOn Linux live image for amd64 architecture.',
       dailyBuildWarning:
         'This is a daily stitch (daily build). It may contain bugs, unstable features, or may not even boot at all.',
+      dailyBuildContribute:
+        'Using this build, though, is a chance to contribute: test it and report anything you find.',
+      dailyBuildRepo:
+        'Unlike the rolling release ISO, this image points at the arsip-dev.blankonlinux.id package repository, which may be less stable than arsip.blankonlinux.id.',
+      zsync: 'Zsync',
+      zsyncNote:
+        'If you want to keep following the daily stitch, you can use this zsync command to save bandwidth.',
       downloadButton: 'Download ISO',
       fileDetails: 'File Details',
       filename: 'Filename',
@@ -392,6 +437,9 @@ const translations = {
       typeValue: 'Live Image (Hybrid ISO)',
       releaseType: 'Release',
       releaseTypeValue: 'Daily Stitch',
+      rollingTab: 'Rolling Release ISO',
+      developmentTab: 'Development ISO',
+      rollingReleaseValue: 'Rolling Release',
       checksum: 'SHA256',
       checksumLoading: 'Loading...',
       checksumError: 'Failed to load',
@@ -420,7 +468,9 @@ const translations = {
       aboutTitle: 'About',
       aboutDescription:
         'BlankOn Linux is an Indonesian Linux distribution based on Debian and an open-source movement since 2004. After years of dormancy, a new team has rebuilt the infrastructure and shipped the first bootable ISO from our own IRGSH build system. Download it, boot it, hack on it.',
-      teamTitle: 'Team',
+      teamTitle: 'The Revival Team',
+      revivalComplete:
+        'As of September 12, 2026, the revival is considered complete. Our thanks go to every contributor, donor and sponsor of the revival, and to the community who still trust our vision.',
       sponsorsTitle: 'Sponsors',
       faqTitle: 'FAQ',
       faq: {
@@ -447,6 +497,20 @@ const translations = {
       },
       updatesTitle: 'Updates',
       updates: [
+        {
+          date: '2026-09-12',
+          text: 'Release candidate 1 for Sinambung is unleashed. We are one step away from the final release. We also mark this day as the completion of the revival effort.',
+        },
+        {
+          date: '2026-09-11',
+          text: 'arsip-dev.blankonlinux.id is synced to arsip.blankonlinux.id, which marks the whole workflow and infrastructure of the distro development as complete.',
+          url: 'https://arsip.blankonlinux.id/',
+        },
+        {
+          date: '2026-09-05',
+          text: 'We are exploring a rolling release scheme. The codename for this rolling release is Sinambung, taken from "berkesinambungan". Read the RFC here.',
+          url: 'https://gist.github.com/herpiko/a1cde839af39636c8bc71929dfa709b9/revisions',
+        },
         {
           date: '2026-09-04',
           text: 'A major update for IRGSH, the packaging factory of the distro. IRGSH now supports multiple distributions and can import packages directly from other sources, mainly to cherry-pick package updates and security updates. The multi-distro approach also opens the door to multi-architecture support in the future.',
