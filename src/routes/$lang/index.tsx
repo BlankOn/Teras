@@ -10,6 +10,11 @@ export const Route = createFileRoute('/$lang/')({ component: Home })
 const TELEGRAM_URL = 'https://t.me/BlankOnLinux/1'
 const STAGING_GIST_URL =
   'https://gist.github.com/herpiko/a1cde839af39636c8bc71929dfa709b9'
+// Praya, the town in Lombok the desktop is named after.
+const PRAYA_WIKI_URL = 'https://en.wikipedia.org/wiki/Praya,_Lombok'
+const PRAYA_GUIDE_URL = 'https://blankonlinux.id/en/wiki/userguides/praya'
+const CONTRIBUTE_URL = 'https://blankonlinux.id/en/wiki/howtocontribute'
+const DONATE_URL = 'https://blankon.id/en/donate'
 
 function Home() {
   const { lang } = Route.useParams()
@@ -22,7 +27,11 @@ function Home() {
         copy={{
           ...t.sneakPeek,
           learnMoreUrl: STAGING_GIST_URL,
+          prayaUrl: PRAYA_WIKI_URL,
+          prayaLearnMoreUrl: PRAYA_GUIDE_URL,
           ctaUrl: TELEGRAM_URL,
+          contributeUrl: CONTRIBUTE_URL,
+          donateUrl: DONATE_URL,
         }}
       />
     </HomeLayout>
