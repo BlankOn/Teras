@@ -14,6 +14,8 @@ const STAGING_GIST_URL =
 // Praya, the town in Lombok the desktop is named after.
 const PRAYA_WIKI_URL = 'https://en.wikipedia.org/wiki/Praya,_Lombok'
 const PRAYA_GUIDE_URL = 'https://blankonlinux.id/en/wiki/userguides/praya'
+// The dictionary entry for the word the release is named after.
+const KBBI_URL = 'https://kbbi.web.id/sinambung'
 const CONTRIBUTE_URL = 'https://blankonlinux.id/en/wiki/howtocontribute'
 const DONATE_URL = 'https://blankon.id/en/donate'
 
@@ -29,6 +31,7 @@ function Home() {
           ...t.sneakPeek,
           learnMoreUrl: STAGING_GIST_URL,
           prayaUrl: PRAYA_WIKI_URL,
+          kbbiUrl: KBBI_URL,
           prayaLearnMoreUrl: PRAYA_GUIDE_URL,
           ctaUrl: TELEGRAM_URL,
           contributeUrl: CONTRIBUTE_URL,

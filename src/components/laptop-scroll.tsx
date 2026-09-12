@@ -59,6 +59,7 @@ export interface LaptopScrollCopy {
   panel4Title: string
   panel4Body: string
   prayaUrl: string
+  kbbiUrl: string
   prayaLearnMoreUrl: string
   learnMore: string
   learnMoreUrl: string
@@ -685,7 +686,9 @@ export default function LaptopScroll({
             <h1 className="mb-3 text-[clamp(28px,5vw,44px)] font-bold leading-[1.12] tracking-[-0.02em]">
               {italiciseName(copy.heroTitle)}
             </h1>
-            <p className="text-[#a7adba]">{copy.heroTagline}</p>
+            <p className="text-[#a7adba]">
+              {linkName(copy.heroTagline, 'sinambung', copy.kbbiUrl)}
+            </p>
           </Card>
         </Panel>
 
@@ -821,7 +824,9 @@ const CTA_CLASS =
 // The desktop is named after a town, so the name carries a link out to it
 // wherever the copy mentions it.
 function linkName(text: string, name: string, url: string) {
-  return text.split(new RegExp(`(${name})`, 'g')).map((part, i) =>
+  // Word boundaries, so `sinambung` does not also match inside
+  // `berkesinambungan` in the same sentence.
+  return text.split(new RegExp(`\\b(${name})\\b`, 'g')).map((part, i) =>
     part === name ? (
       <a
         key={i}
