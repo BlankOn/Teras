@@ -70,7 +70,7 @@ export interface LaptopScrollCopy {
   ctaUrl: string
   contributeUrl: string
   donateUrl: string
-  credit: string
+  credit: Array<string>
   creditLink: string
 }
 
@@ -755,8 +755,22 @@ export default function LaptopScroll({
             <img
               src={BONI_IMAGE}
               alt={copy.comingSoon}
-              className="mx-auto mb-7 h-[clamp(170px,30vh,300px)] w-auto"
+              className="mx-auto mb-6 h-[clamp(170px,30vh,300px)] w-auto"
             />
+            <p className="mx-auto mb-7 text-[13px] leading-relaxed text-[#6f7684]">
+              {copy.credit.map((line, i) => (
+                <span key={i} className="block">
+                  {italiciseName(line)}
+                </span>
+              ))}
+              <Link
+                to="/$lang/revival"
+                params={{ lang }}
+                className="pointer-events-auto inline-block text-[#7aa8ff] underline-offset-4 hover:underline"
+              >
+                {copy.creditLink} &rarr;
+              </Link>
+            </p>
             {/* The three ways in. They stack on a narrow viewport rather
                 than shrinking to fit. */}
             <div className="flex flex-wrap items-center justify-center gap-3">
@@ -792,17 +806,6 @@ export default function LaptopScroll({
                 {copy.ctaDonate}
               </a>
             </div>
-
-            <p className="mx-auto mt-8 max-w-[46ch] text-[13px] leading-relaxed text-[#6f7684]">
-              {italiciseName(copy.credit)}{' '}
-              <Link
-                to="/$lang/revival"
-                params={{ lang }}
-                className="pointer-events-auto text-[#7aa8ff] underline-offset-4 hover:underline"
-              >
-                {copy.creditLink} &rarr;
-              </Link>
-            </p>
           </div>
         </section>
       </div>
