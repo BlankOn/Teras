@@ -10,9 +10,9 @@ export const Route = createFileRoute('/$lang/download')({ component: Download })
 // The rolling release is the one to hand most people; the daily stitch is the
 // development build, and carries the warning that goes with it.
 const ROLLING_ISO_URL =
-  'http://jahitan.blankonlinux.id/releases/current/blankon-live-image-amd64.hybrid.iso'
+  'https://jahitan.blankonlinux.id/releases/current/blankon-live-image-amd64.hybrid.iso'
 const DEVELOPMENT_ISO_URL =
-  'http://jahitan.blankonlinux.id/harian/current/blankon-live-image-amd64.hybrid.iso'
+  'https://jahitan.blankonlinux.id/harian/current/blankon-live-image-amd64.hybrid.iso'
 const ISO_FILENAME = 'blankon-live-image-amd64.hybrid.iso'
 
 const sha256sumUrl = (isoUrl: string) => `${isoUrl}.sha256sum`

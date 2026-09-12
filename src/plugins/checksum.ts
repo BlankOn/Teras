@@ -4,7 +4,7 @@ const VIRTUAL_ID = 'virtual:checksum'
 const RESOLVED_ID = '\0' + VIRTUAL_ID
 
 const CHECKSUM_URL =
-  'http://jahitan.blankonlinux.id/harian/current/blankon-live-image-amd64.hybrid.iso.sha256sum'
+  'https://jahitan.blankonlinux.id/harian/current/blankon-live-image-amd64.hybrid.iso.sha256sum'
 
 export function checksumPlugin(): Plugin {
   let checksum = ''
