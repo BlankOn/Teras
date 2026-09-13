@@ -13,10 +13,10 @@ import type * as THREE_NS from 'three'
  */
 
 const MODEL_URL = '/laptop/mac-noUv.glb'
-const KEYBOARD_URL = '/laptop/keyboard-overlay.png'
-const SCREEN_IMAGE = '/screenshot.png'
+const KEYBOARD_URL = '/laptop/keyboard-overlay.webp'
+const SCREEN_IMAGE = '/screenshot.webp'
 // Boni, the BlankOn mascot, who closes the page.
-const BONI_IMAGE = '/boni-pose-3.png'
+const BONI_IMAGE = '/boni-pose-3.webp'
 
 const SCREEN_SIZE = [29.4, 20] // model units
 
@@ -106,7 +106,47 @@ export default function LaptopScroll({
       intro.style.minHeight = `calc(100svh - ${root.offsetTop}px)`
     }
     fitIntro()
-    window.addEventListener('resize', fitIntro)
+
+    // Everything that has to be remeasured hangs off one listener, so a single
+    // resize costs one reflow rather than one per subscriber. The scene adds
+    // itself here once it has loaded.
+    const onResized: Array<() => void> = [fitIntro]
+
+    // A phone slides its address bar away as the page scrolls, and every step
+    // of that slide fires `resize`. Honouring those is expensive in the worst
+    // possible place: each one reflows the page and reallocates the drawing
+    // buffer on the very frames the scroll can least afford. Worse, the scroll
+    // keyframes are measured against innerHeight, so remeasuring mid-gesture
+    // shifts the animation under the reader's thumb - the jump that reads as
+    // stutter. Ignore height-only changes small enough to be browser chrome;
+    // a rotation or a real resize changes the width, or changes the height by
+    // far more than a toolbar could.
+    const hasSlidingToolbar = window.matchMedia('(hover: none)').matches
+    const TOOLBAR_SLACK = 0.2
+    let lastW = window.innerWidth
+    let lastH = window.innerHeight
+    let resizeFrame = 0
+
+    const onResize = () => {
+      const w = window.innerWidth
+      const h = window.innerHeight
+      if (
+        hasSlidingToolbar &&
+        w === lastW &&
+        Math.abs(h - lastH) <= lastH * TOOLBAR_SLACK
+      )
+        return
+      lastW = w
+      lastH = h
+      // A desktop drag fires these continuously; coalesce the burst into one
+      // pass on the next frame.
+      if (resizeFrame) return
+      resizeFrame = requestAnimationFrame(() => {
+        resizeFrame = 0
+        onResized.forEach((fn) => fn())
+      })
+    }
+    window.addEventListener('resize', onResize)
 
     let disposed = false
     const isDisposed = () => disposed
@@ -129,9 +169,28 @@ export default function LaptopScroll({
 
       /* ---------- renderer / scene / camera ---------- */
 
-      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+      // The scene is fill-rate bound, not detail bound: it is a smooth metal
+      // shell under soft light, with no fine geometry and no 3D text. On a
+      // phone held at arm's length the samples a 2x buffer adds land on
+      // gradients nobody can resolve, while the fragment work they cost is
+      // what drops the frame. Render at 1.5x there and spend the headroom on
+      // holding 60fps instead.
+      const compact = window.matchMedia('(max-width: 820px)').matches
+      const maxPixelRatio = compact ? 1.5 : 2
+
+      const renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: true,
+        powerPreference: 'high-performance',
+      })
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, maxPixelRatio))
       renderer.shadowMap.enabled = true
+      // The shadow map is re-rendered - and, under VSM, re-blurred - on every
+      // frame it is left to update itself. It only actually changes when the
+      // laptop moves, so applyPose flags it and the rest of the scroll (the
+      // push in, the dive, the fade) reuses the map it already has.
+      renderer.shadowMap.autoUpdate = false
+      renderer.shadowMap.needsUpdate = true
       // VSM blurs the shadow map itself, giving a soft-edged contact shadow
       // rather than a hard silhouette.
       renderer.shadowMap.type = THREE.VSMShadowMap
@@ -167,15 +226,22 @@ export default function LaptopScroll({
       const key = new THREE.DirectionalLight(0xffffff, 1.15)
       key.position.set(5, 9, 7)
       key.castShadow = true
-      key.shadow.mapSize.set(2048, 2048)
+      // VSM blurs the map itself, so its cost scales with the map's area. The
+      // contact shadow is a soft blob a few hundred pixels across on a phone,
+      // and the blur destroys the extra detail a 2048 map would carry anyway.
+      // The blur radius is scaled with the map so the shadow stays exactly as
+      // soft as it was - the radius is in texels, so halving one without the
+      // other would change the look.
+      const shadowSize = compact ? 1024 : 2048
+      key.shadow.mapSize.set(shadowSize, shadowSize)
       key.shadow.camera.near = 1
       key.shadow.camera.far = 30
       key.shadow.camera.left = -5
       key.shadow.camera.right = 5
       key.shadow.camera.top = 5
       key.shadow.camera.bottom = -5
-      key.shadow.radius = 3
-      key.shadow.blurSamples = 16
+      key.shadow.radius = (3 * shadowSize) / 2048
+      key.shadow.blurSamples = compact ? 8 : 16
       key.shadow.bias = -0.0008
       key.shadow.normalBias = 0.03
       scene.add(key)
@@ -236,6 +302,9 @@ export default function LaptopScroll({
         tex.colorSpace = THREE.SRGBColorSpace
 
         const img = new Image()
+        // Keep the decode off the main thread; it lands during the opening
+        // frames, which is exactly when the page can least afford to block.
+        img.decoding = 'async'
         img.onload = () => {
           // Fitted, not stretched: the panel is 3:2-ish and the screenshot
           // 16:9, so it is drawn as large as it goes with its proportions
@@ -245,7 +314,13 @@ export default function LaptopScroll({
           const h = img.height * s
           g.drawImage(img, (c.width - w) / 2, (c.height - h) / 2, w, h)
           tex.needsUpdate = true
-          tex.anisotropy = renderer.capabilities.getMaxAnisotropy()
+          // The panel is oblique only while the laptop is still swung round;
+          // by the time it is filling the frame it is square to the camera,
+          // where anisotropic filtering past a few taps buys nothing.
+          tex.anisotropy = Math.min(
+            renderer.capabilities.getMaxAnisotropy(),
+            compact ? 4 : 8,
+          )
           needsRender = true
         }
         img.src = src
@@ -418,20 +493,38 @@ export default function LaptopScroll({
         )
       }
 
+      // Assigning a style costs a style recalculation even when the value is
+      // the one already there. These run on every animated frame, and the
+      // hint's runs on every scroll event - which, once it has finished
+      // fading, is the same 0.000 written over and over for the rest of the
+      // page.
+      const written = new WeakMap<HTMLElement, Map<string, string>>()
+      const setStyle = (el: HTMLElement, prop: string, value: string) => {
+        let props = written.get(el)
+        if (!props) written.set(el, (props = new Map()))
+        if (props.get(prop) === value) return
+        props.set(prop, value)
+        el.style.setProperty(prop, value)
+      }
+
       const readScroll = () => {
         const y = window.scrollY
 
         target = THREE.MathUtils.clamp((y - animStart) / animSpan, 0, 1)
 
         // The hint has done its job the moment the page starts moving.
-        hint.style.opacity = (
-          1 -
-          THREE.MathUtils.smoothstep(
-            (y - animStart) / window.innerHeight,
-            0,
-            0.4,
-          )
-        ).toFixed(3)
+        setStyle(
+          hint,
+          'opacity',
+          (
+            1 -
+            THREE.MathUtils.smoothstep(
+              (y - animStart) / window.innerHeight,
+              0,
+              0.4,
+            )
+          ).toFixed(3),
+        )
 
         needsRender = true
       }
@@ -486,6 +579,10 @@ export default function LaptopScroll({
         needsRender = true
       }
 
+      // The pose the shadow map was last built for.
+      let lastYaw = Number.NaN
+      let lastLid = Number.NaN
+
       const applyPose = (p: number) => {
         // The run-up covers everything up to stage five; the tail carries
         // straight on from there without a pause - still pushing in, and now
@@ -521,6 +618,18 @@ export default function LaptopScroll({
           0,
           Math.min(open / 0.75, 1),
         )
+
+        // Shadows depend on the light and the model, never on the camera, so
+        // once the laptop has settled the map stays valid through the whole
+        // push in and dive - which is most of the scroll.
+        if (
+          macGroup.rotation.y !== lastYaw ||
+          lidGroup.rotation.x !== lastLid
+        ) {
+          lastYaw = macGroup.rotation.y
+          lastLid = lidGroup.rotation.x
+          renderer.shadowMap.needsUpdate = true
+        }
 
         // The panel wakes as soon as the lid breaks away from the base...
         const wake = THREE.MathUtils.smoothstep(open, 0.02, 0.14)
@@ -567,14 +676,20 @@ export default function LaptopScroll({
         // Gone well before the bottom of the scroll, so the closing panel has
         // the page to itself rather than sharing it with a ghost of the
         // scene.
-        container.style.opacity = (
-          1 - THREE.MathUtils.smoothstep(tail, 0.15, 0.8)
-        ).toFixed(3)
-        finale.style.opacity = THREE.MathUtils.smoothstep(
-          tail,
-          0.5,
-          0.85,
-        ).toFixed(3)
+        const sceneAlpha = 1 - THREE.MathUtils.smoothstep(tail, 0.15, 0.8)
+        setStyle(container, 'opacity', sceneAlpha.toFixed(3))
+        setStyle(
+          finale,
+          'opacity',
+          THREE.MathUtils.smoothstep(tail, 0.5, 0.85).toFixed(3),
+        )
+        // A fully faded canvas is still a full-screen composited layer, and
+        // the closing panel scrolls right over it. Taking it out of the
+        // compositor hands those frames back to the part of the page the
+        // reader is actually looking at.
+        const lit = sceneAlpha >= 0.005
+        setStyle(container, 'visibility', lit ? 'visible' : 'hidden')
+        return lit
       }
 
       let frame = 0
@@ -592,13 +707,7 @@ export default function LaptopScroll({
         if (!needsRender) return
         needsRender = false
 
-        applyPose(current)
-        renderer.render(scene, camera)
-      }
-
-      const onResize = () => {
-        resize()
-        readScroll()
+        if (applyPose(current)) renderer.render(scene, camera)
       }
 
       new GLTFLoader().load(MODEL_URL, (glb) => {
@@ -624,10 +733,15 @@ export default function LaptopScroll({
         cleanups.push(() => clearTimeout(revealed))
 
         window.addEventListener('scroll', readScroll, { passive: true })
-        window.addEventListener('resize', onResize)
+        const onViewportChange = () => {
+          resize()
+          readScroll()
+        }
+        onResized.push(onViewportChange)
         cleanups.push(() => {
           window.removeEventListener('scroll', readScroll)
-          window.removeEventListener('resize', onResize)
+          const i = onResized.indexOf(onViewportChange)
+          if (i !== -1) onResized.splice(i, 1)
         })
       })
 
@@ -649,7 +763,8 @@ export default function LaptopScroll({
 
     return () => {
       disposed = true
-      window.removeEventListener('resize', fitIntro)
+      window.removeEventListener('resize', onResize)
+      if (resizeFrame) cancelAnimationFrame(resizeFrame)
       cleanups.forEach((fn) => fn())
     }
   }, [])
@@ -758,6 +873,10 @@ export default function LaptopScroll({
             <img
               src={BONI_IMAGE}
               alt={copy.comingSoon}
+              loading="lazy"
+              decoding="async"
+              width={629}
+              height={864}
               className="mx-auto mb-6 h-[clamp(170px,30vh,300px)] w-auto"
             />
             <p className="mx-auto mb-7 text-[13px] leading-relaxed text-[#6f7684]">
