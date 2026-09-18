@@ -16,7 +16,10 @@ const DEVELOPMENT_ISO_URL =
 const ISO_FILENAME = 'blankon-live-image-amd64.hybrid.iso'
 
 const sha256sumUrl = (isoUrl: string) => `${isoUrl}.sha256sum`
-const zsyncUrl = (isoUrl: string) => `${isoUrl}.zsync`
+// zsync speaks plain HTTP only, so the command gets an http:// URL even though
+// every link on this page stays on https.
+const zsyncUrl = (isoUrl: string) =>
+  `${isoUrl.replace(/^https:\/\//, 'http://')}.zsync`
 
 function DownloadIcon({ className }: { className: string }) {
   return (
