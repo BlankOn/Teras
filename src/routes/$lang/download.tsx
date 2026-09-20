@@ -101,9 +101,11 @@ function ReleasePanel({
           {d.fileDetails}
         </h2>
         <dl className="divide-y divide-fd-border rounded-lg border border-fd-border text-sm">
-          <div className="flex justify-between px-4 py-2.5">
-            <dt className="text-fd-muted-foreground">{d.filename}</dt>
-            <dd className="font-mono">{filename}</dd>
+          <div className="flex justify-between gap-4 px-4 py-2.5">
+            <dt className="shrink-0 text-fd-muted-foreground">{d.filename}</dt>
+            {/* Release image names are long enough to wrap on a phone, so the
+                value breaks anywhere rather than pushing into its label. */}
+            <dd className="break-all text-right font-mono">{filename}</dd>
           </div>
           <div className="flex justify-between px-4 py-2.5">
             <dt className="text-fd-muted-foreground">{d.architecture}</dt>
@@ -172,7 +174,7 @@ function Download() {
 
   return (
     <HomeLayout {...baseOptions(lang)}>
-      <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col px-4 py-16">
+      <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col px-4 py-16">
         <h1 className="text-3xl font-bold">{d.title}</h1>
         <p className="mt-3 text-fd-muted-foreground">{d.subtitle}</p>
 
