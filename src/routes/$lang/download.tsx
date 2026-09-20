@@ -10,12 +10,16 @@ export const Route = createFileRoute('/$lang/download')({ component: Download })
 // The rolling release is the one to hand most people; the daily stitch is the
 // development build, and carries the warning that goes with it.
 const ROLLING_ISO_URL =
-  'https://jahitan.blankonlinux.id/releases/current/blankon-live-image-amd64.hybrid.iso'
+  'https://jahitan.blankonlinux.id/releases/current/blankon-live-image-amd64-sinambung-2026-09-20-verbeek.hybrid.iso'
+// The release image drops the .iso before .sha256sum; the daily one keeps it.
+const ROLLING_SHA256SUM_URL =
+  'https://jahitan.blankonlinux.id/releases/current/blankon-live-image-amd64-sinambung-2026-09-20-verbeek.hybrid.sha256sum'
 const DEVELOPMENT_ISO_URL =
   'https://jahitan.blankonlinux.id/harian/current/blankon-live-image-amd64.hybrid.iso'
-const ISO_FILENAME = 'blankon-live-image-amd64.hybrid.iso'
 
-const sha256sumUrl = (isoUrl: string) => `${isoUrl}.sha256sum`
+// Each build names its own image, so the filename shown comes off the URL
+// rather than from one constant shared by both tabs.
+const isoFilename = (isoUrl: string) => isoUrl.split('/').pop() ?? ''
 // zsync speaks plain HTTP only, so the command gets an http:// URL even though
 // every link on this page stays on https.
 const zsyncUrl = (isoUrl: string) =>
@@ -45,17 +49,21 @@ function DownloadIcon({ className }: { className: string }) {
 function ReleasePanel({
   d,
   isoUrl,
+  sha256sumUrl,
   releaseValue,
   warning,
   zsync,
 }: {
   d: ReturnType<typeof getTranslations>['downloadPage']
   isoUrl: string
+  sha256sumUrl: string
   releaseValue: string
   warning?: string
   // Only the build that moves every day is worth following with zsync.
   zsync?: boolean
 }) {
+  const filename = isoFilename(isoUrl)
+
   return (
     <>
       {warning && (
@@ -73,7 +81,7 @@ function ReleasePanel({
           </div>
           <div className="min-w-0">
             <p className="truncate font-mono text-sm font-medium">
-              {ISO_FILENAME}
+              {filename}
             </p>
             <p className="text-xs text-fd-muted-foreground">{d.typeValue}</p>
           </div>
@@ -95,7 +103,7 @@ function ReleasePanel({
         <dl className="divide-y divide-fd-border rounded-lg border border-fd-border text-sm">
           <div className="flex justify-between px-4 py-2.5">
             <dt className="text-fd-muted-foreground">{d.filename}</dt>
-            <dd className="font-mono">{ISO_FILENAME}</dd>
+            <dd className="font-mono">{filename}</dd>
           </div>
           <div className="flex justify-between px-4 py-2.5">
             <dt className="text-fd-muted-foreground">{d.architecture}</dt>
@@ -113,7 +121,7 @@ function ReleasePanel({
             <dt className="shrink-0 text-fd-muted-foreground">{d.checksum}</dt>
             <dd className="flex min-w-0 items-center gap-2">
               <a
-                href={sha256sumUrl(isoUrl)}
+                href={sha256sumUrl}
                 className="flex shrink-0 items-center gap-1 rounded border border-fd-border px-2 py-0.5 text-xs text-fd-muted-foreground transition-colors hover:bg-fd-accent hover:text-fd-accent-foreground"
                 download
               >
@@ -196,12 +204,14 @@ function Download() {
           <ReleasePanel
             d={d}
             isoUrl={ROLLING_ISO_URL}
+            sha256sumUrl={ROLLING_SHA256SUM_URL}
             releaseValue={d.rollingReleaseValue}
           />
         ) : (
           <ReleasePanel
             d={d}
             isoUrl={DEVELOPMENT_ISO_URL}
+            sha256sumUrl={`${DEVELOPMENT_ISO_URL}.sha256sum`}
             releaseValue={d.releaseTypeValue}
             warning={d.dailyBuildWarning}
             zsync
