@@ -10,10 +10,10 @@ export const Route = createFileRoute('/$lang/download')({ component: Download })
 // The rolling release is the one to hand most people; the daily stitch is the
 // development build, and carries the warning that goes with it.
 const ROLLING_ISO_URL =
-  'https://jahitan.blankonlinux.id/releases/current/blankon-live-image-amd64-sinambung-2026-09-20-verbeek.hybrid.iso'
+  'https://jahitan.blankonlinux.id/releases/current/blankon-live-image-amd64-sinambung-2026-09-21-verbeek.hybrid.iso'
 // The release image drops the .iso before .sha256sum; the daily one keeps it.
 const ROLLING_SHA256SUM_URL =
-  'https://jahitan.blankonlinux.id/releases/current/blankon-live-image-amd64-sinambung-2026-09-20-verbeek.hybrid.sha256sum'
+  'https://jahitan.blankonlinux.id/releases/current/blankon-live-image-amd64-sinambung-2026-09-21-verbeek.hybrid.sha256sum'
 const DEVELOPMENT_ISO_URL =
   'https://jahitan.blankonlinux.id/harian/current/blankon-live-image-amd64.hybrid.iso'
 
