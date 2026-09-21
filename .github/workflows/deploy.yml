@@ -1,0 +1,31 @@
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: ["Build and Push Docker Image", "Build Docker Image"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Deploy on VM
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2
+        with:
+          host: ${{ secrets.RAFI_SSH_HOSTNAME }}
+          port: ${{ secrets.RAFI_SSH_PORT }}
+          username: ${{ secrets.RAFI_SSH_USER }}
+          key: ${{ secrets.TERAS_DEPLOY_KEY }}
+          command_timeout: 5m
+          script: bash deploy-teras.sh
