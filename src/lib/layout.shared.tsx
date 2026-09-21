@@ -233,6 +233,7 @@ const translations = {
       rollingTab: 'ISO Rilis Bergulir',
       developmentTab: 'ISO Pengembangan',
       rollingReleaseValue: 'Rilis Bergulir',
+      rollingChecking: 'Memeriksa rilis terbaru di jahitan.blankonlinux.id…',
       checksum: 'SHA256',
       checksumLoading: 'Memuat...',
       checksumError: 'Gagal memuat',
@@ -449,6 +450,8 @@ const translations = {
       rollingTab: 'Rolling Release ISO',
       developmentTab: 'Development ISO',
       rollingReleaseValue: 'Rolling Release',
+      rollingChecking:
+        'Checking jahitan.blankonlinux.id for the latest release…',
       checksum: 'SHA256',
       checksumLoading: 'Loading...',
       checksumError: 'Failed to load',
