@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock'
 import { HomeLayout } from 'fumadocs-ui/layouts/home'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { baseOptions, getTranslations } from '@/lib/layout.shared'
 import SiteFooter from '@/components/site-footer'
 
@@ -9,11 +9,66 @@ export const Route = createFileRoute('/$lang/download')({ component: Download })
 
 // The rolling release is the one to hand most people; the daily stitch is the
 // development build, and carries the warning that goes with it.
-const ROLLING_ISO_URL =
-  'https://jahitan.blankonlinux.id/releases/current/blankon-live-image-amd64-sinambung-2026-09-21-verbeek.hybrid.iso'
-// The release image drops the .iso before .sha256sum; the daily one keeps it.
-const ROLLING_SHA256SUM_URL =
-  'https://jahitan.blankonlinux.id/releases/current/blankon-live-image-amd64-sinambung-2026-09-21-verbeek.hybrid.sha256sum'
+const ROLLING_DIR_URL = 'https://jahitan.blankonlinux.id/releases/current/'
+// Each release renames its image, so the page reads the directory listing to
+// find it. This is only the last-known-good answer, used until that listing
+// arrives or when it can't be read.
+const FALLBACK_ROLLING_ISO_URL = `${ROLLING_DIR_URL}blankon-sinambung-26.09-verbeek-amd64.iso`
+
+type RollingRelease = { isoUrl: string; sha256sumUrl: string }
+
+const FALLBACK_ROLLING: RollingRelease = {
+  isoUrl: FALLBACK_ROLLING_ISO_URL,
+  sha256sumUrl: `${FALLBACK_ROLLING_ISO_URL}.sha256sum`,
+}
+
+// Picks the image out of nginx's autoindex page, along with whichever
+// checksum name sits beside it - older releases dropped the .iso before
+// .sha256sum, newer ones keep it.
+function parseRollingListing(html: string): RollingRelease | undefined {
+  const hrefs = [...html.matchAll(/href="([^"?/]+)"/g)].map((m) => m[1])
+  const iso = hrefs.find((h) => h.endsWith('.iso') && h.includes('amd64'))
+  if (!iso) return undefined
+  const sha256sum =
+    [`${iso}.sha256sum`, `${iso.replace(/\.iso$/, '')}.sha256sum`].find((h) =>
+      hrefs.includes(h),
+    ) ?? `${iso}.sha256sum`
+  return {
+    isoUrl: new URL(iso, ROLLING_DIR_URL).href,
+    sha256sumUrl: new URL(sha256sum, ROLLING_DIR_URL).href,
+  }
+}
+
+// Undefined while the listing is still being read.
+function useRollingRelease() {
+  const [release, setRelease] = useState<RollingRelease>()
+
+  useEffect(() => {
+    const controller = new AbortController()
+    let unmounted = false
+    const timeout = setTimeout(() => controller.abort(), 8000)
+    fetch(ROLLING_DIR_URL, { signal: controller.signal })
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        return res.text()
+      })
+      .then((html) => setRelease(parseRollingListing(html) ?? FALLBACK_ROLLING))
+      .catch((err: unknown) => {
+        // Leaving the page isn't a failure worth reporting; a timeout is.
+        if (unmounted) return
+        console.error('Could not read the rolling release listing:', err)
+        setRelease(FALLBACK_ROLLING)
+      })
+      .finally(() => clearTimeout(timeout))
+    return () => {
+      unmounted = true
+      controller.abort()
+    }
+  }, [])
+
+  return release
+}
+
 const DEVELOPMENT_ISO_URL =
   'https://jahitan.blankonlinux.id/harian/current/blankon-live-image-amd64.hybrid.iso'
 
@@ -80,9 +135,7 @@ function ReleasePanel({
             💿
           </div>
           <div className="min-w-0">
-            <p className="truncate font-mono text-sm font-medium">
-              {filename}
-            </p>
+            <p className="truncate font-mono text-sm font-medium">{filename}</p>
             <p className="text-xs text-fd-muted-foreground">{d.typeValue}</p>
           </div>
         </div>
@@ -160,10 +213,34 @@ function ReleasePanel({
   )
 }
 
+// Stands in for the download card while the release listing is read, sized
+// like it so the page doesn't jump when the real one arrives.
+function RollingPending({ message }: { message: string }) {
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      className="mt-6 rounded-xl border border-fd-border bg-fd-card p-6"
+    >
+      <div className="flex items-center gap-3">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-fd-primary/10">
+          <span className="h-5 w-5 animate-spin rounded-full border-2 border-fd-primary border-t-transparent" />
+        </div>
+        <div className="min-w-0 flex-1 space-y-2">
+          <p className="text-sm font-medium">{message}</p>
+          <div className="h-3 w-2/3 animate-pulse rounded bg-fd-muted" />
+        </div>
+      </div>
+      <div className="mt-5 h-10 w-full animate-pulse rounded-md bg-fd-muted" />
+    </div>
+  )
+}
+
 function Download() {
   const { lang } = Route.useParams()
   const t = getTranslations(lang)
   const d = t.downloadPage
+  const rolling = useRollingRelease()
 
   const [tab, setTab] = useState<'rolling' | 'development'>('rolling')
 
@@ -203,12 +280,16 @@ function Download() {
         </div>
 
         {tab === 'rolling' ? (
-          <ReleasePanel
-            d={d}
-            isoUrl={ROLLING_ISO_URL}
-            sha256sumUrl={ROLLING_SHA256SUM_URL}
-            releaseValue={d.rollingReleaseValue}
-          />
+          rolling ? (
+            <ReleasePanel
+              d={d}
+              isoUrl={rolling.isoUrl}
+              sha256sumUrl={rolling.sha256sumUrl}
+              releaseValue={d.rollingReleaseValue}
+            />
+          ) : (
+            <RollingPending message={d.rollingChecking} />
+          )
         ) : (
           <ReleasePanel
             d={d}
