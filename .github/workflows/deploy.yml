@@ -34,6 +34,6 @@ jobs:
         if: always()
         run: |
           curl -fsS -X POST -H 'Content-Type: application/json' \
-            "https://api.telegram.org/bot${{ secrets.LB_TELEGRAM_TOKEN }}/sendMessage" \
+            "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_KEY}}/sendMessage" \
             -d "{\"chat_id\":\"${{ secrets.TELEGRAM_CHAT_ID }}\",\"message_thread_id\":\"${{ secrets.TELEGRAM_THREAD_ID }}\",\"parse_mode\":\"HTML\",\"disable_notification\":true,\"text\":\"Deploy teras-website: ${{ job.status }}\"}" \
             || true
