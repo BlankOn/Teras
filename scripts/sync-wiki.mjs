@@ -15,8 +15,8 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const REPO_URL = 'https://github.com/blankon/revival.git'
-const TEMP_DIR = path.join(__dirname, '../.temp/revival')
+const REPO_URL = 'https://github.com/blankon/blankon-linux.git'
+const TEMP_DIR = path.join(__dirname, '../.temp/blankon-linux')
 const WIKI_DIR = path.join(__dirname, '../content/wiki')
 
 // Directories to ignore when processing
