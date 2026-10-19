@@ -145,12 +145,13 @@ function convertToMdx(content, filename, editPath, titleOverride) {
 
   if (processedContent.startsWith('---')) {
     // Inject editPath into existing frontmatter
-    return processedContent.replace(/^---\n/, `---\neditPath: ${editPath}\n`)
+    return processedContent.replace(/^---\n/, `---\neditPath: ${JSON.stringify(editPath)}\n`)
   }
 
+  // Quote values so titles containing YAML syntax (e.g. ": ") stay valid
   const frontmatter = `---
-title: ${title}
-editPath: ${editPath}
+title: ${JSON.stringify(title)}
+editPath: ${JSON.stringify(editPath)}
 ---
 
 `
