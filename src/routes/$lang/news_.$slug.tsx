@@ -1,5 +1,5 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { HomeLayout } from 'fumadocs-ui/layouts/home'
 import type { NewsLang } from '@/lib/news'
 import { baseOptions } from '@/lib/layout.shared'
@@ -15,6 +15,7 @@ const articleContent = {
     back: '← Kembali ke Berita',
     copy: 'Salin',
     copied: 'Tersalin',
+    closeImage: 'Tutup gambar',
     notFoundTitle: 'Berita Tidak Ditemukan',
     notFoundDescription: 'Berita yang Anda cari tidak tersedia.',
   },
@@ -22,6 +23,7 @@ const articleContent = {
     back: '← Back to News',
     copy: 'Copy',
     copied: 'Copied',
+    closeImage: 'Close image',
     notFoundTitle: 'News Not Found',
     notFoundDescription:
       'The news article you are looking for is not available.',
@@ -41,6 +43,15 @@ function NewsArticlePage() {
   const content = articleContent[lang as keyof typeof articleContent]
   const article = getNewsArticle(slug, lang as NewsLang)
   const bodyRef = useRef<HTMLElement>(null)
+  const [enlarged, setEnlarged] = useState<{ src: string; alt: string } | null>(
+    null,
+  )
+  // A stable object keeps React from resetting the article HTML on re-render,
+  // which would drop the copy buttons attached below.
+  const articleHtml = useMemo(
+    () => ({ __html: article?.html ?? '' }),
+    [article],
+  )
 
   // The article body is plain HTML from Markdown, so each code block gets its
   // copy button attached here.
@@ -71,6 +82,23 @@ function NewsArticlePage() {
     return () => buttons.forEach((button) => button.remove())
   }, [article, content])
 
+  // Article images open in a full-size overlay when clicked.
+  const onArticleClick = (event: React.MouseEvent<HTMLElement>) => {
+    if (event.target instanceof HTMLImageElement) {
+      setEnlarged({ src: event.target.src, alt: event.target.alt })
+    }
+  }
+
+  useEffect(() => {
+    if (!enlarged) return
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setEnlarged(null)
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [enlarged])
+
   return (
     <HomeLayout {...baseOptions(lang)}>
       <main className="flex flex-1 flex-col">
@@ -91,8 +119,9 @@ function NewsArticlePage() {
                 </p>
                 <article
                   ref={bodyRef}
-                  className="wysiwyg dark:wysiwyg-invert max-w-none wysiwyg-th:px-4 wysiwyg-th:py-2 wysiwyg-td:px-4 wysiwyg-td:py-2"
-                  dangerouslySetInnerHTML={{ __html: article.html }}
+                  onClick={onArticleClick}
+                  className="[&_img]:cursor-zoom-in wysiwyg dark:wysiwyg-invert max-w-none wysiwyg-th:px-4 wysiwyg-th:py-2 wysiwyg-td:px-4 wysiwyg-td:py-2"
+                  dangerouslySetInnerHTML={articleHtml}
                 />
               </>
             ) : (
@@ -108,6 +137,28 @@ function NewsArticlePage() {
           </div>
         </section>
       </main>
+      {enlarged && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={enlarged.alt}
+          className="fixed inset-0 z-50 flex cursor-zoom-out items-center justify-center bg-black/80 p-4"
+          onClick={() => setEnlarged(null)}
+        >
+          <img
+            src={enlarged.src}
+            alt={enlarged.alt}
+            className="max-h-full max-w-full rounded-lg shadow-2xl"
+          />
+          <button
+            type="button"
+            aria-label={content.closeImage}
+            className="absolute right-4 top-4 rounded-full bg-white/10 px-3 py-1 text-2xl text-white hover:bg-white/20"
+          >
+            ×
+          </button>
+        </div>
+      )}
       <SiteFooter lang={lang} />
     </HomeLayout>
   )
