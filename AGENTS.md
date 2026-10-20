@@ -79,3 +79,31 @@ Run `npm run check` before committing.
 ## Shadcn Components
 
 Use: `npx shadcn@latest add <component>` (e.g., `add button`)
+
+## News: Package Update Articles
+
+When asked to create, write, or update a package update article in `content/news/`, follow the structure of the latest existing one (e.g. `content/news/2026-10-20-package-updates-2026-10-20.en.md`). Reuse its **structure and wording conventions only**.
+
+**Never copy content values from a previous article.** The package list, versions, package count, "what's new" items, known issues, images, and kudos/credits must come from the human for this round. If any of these are missing, ask instead of guessing or reusing old values.
+
+### Files and title
+
+- Always write both languages: `YYYY-MM-DD-package-updates-YYYY-MM-DD.en.md` and `.id.md`. The date appears twice because each slug must be unique.
+- Title: `# Package Updates YYYY-MM-DD` (en) and `# Pembaruan Paket YYYY-MM-DD` (id), followed by a `---` line.
+
+### Content pattern (in order)
+
+1. Intro paragraph: a new round of updates is available for the current release, and how many packages it updates (count = rows in the table).
+2. Optional known-issue blockquote (`> **Known issue with ...:**`) with workaround steps, only if the human reports one.
+3. Update instructions: the `sudo apt update && sudo apt full-upgrade` code block, then "Or update via GNOME Software."
+4. `## What's in this update` / `## Isi pembaruan ini`: one sentence introducing the table (mention security updates only if the human says so), then the table.
+5. Optional `## What's new in <Project>` sections for notable changes the human provides, as a bullet list with bold lead-ins, PR links, and images from `content/assets/` placed under the item they illustrate (with descriptive alt text).
+6. `## Kudos` (both languages): bold names with what they did, as provided by the human; a final non-bold line thanking the rest of the BlankOn Linux development team.
+7. `## We want your feedback` / `## Kami menunggu masukan Anda` and `## How to Support Us` / `## Cara Mendukung Kami` boilerplate, ending with "Salam merdeka!".
+
+### Table pattern
+
+- Two columns: `| Package | Version |` (en) and `| Paket | Versi |` (id).
+- One row per **binary** package, sorted alphabetically, with the **new** version (e.g. the arsip-dev version from the human's list).
+- Exclude packages the human marks as not being updated (e.g. "Not in arsip-dev").
+- Run `npx prettier --write content/news/<file>` so columns are aligned.

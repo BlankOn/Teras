@@ -37,6 +37,13 @@ function resolveAssetPaths(raw: string): string {
   )
 }
 
+// Wide tables scroll inside their own container instead of stretching the page.
+function wrapTables(html: string): string {
+  return html
+    .replace(/<table>/g, '<div class="overflow-x-auto"><table>')
+    .replace(/<\/table>/g, '</table></div>')
+}
+
 function extractTitle(raw: string): string {
   const match = raw.match(/^#\s+(.+)$/m)
   return match ? match[1].trim() : ''
@@ -73,7 +80,7 @@ const articles: Array<NewsArticle> = Object.entries(rawFiles)
       lang: lang as NewsLang,
       title: extractTitle(raw),
       excerpt: extractExcerpt(raw),
-      html: marked.parse(resolveAssetPaths(raw), { async: false }),
+      html: wrapTables(marked.parse(resolveAssetPaths(raw), { async: false })),
     }
   })
   .filter((article): article is NewsArticle => article !== null)
