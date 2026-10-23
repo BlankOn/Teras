@@ -24,9 +24,18 @@ const config = defineConfig({
     tailwindcss(),
     tanstackStart({
       preset: 'static',
+      // The crawler only follows <a> links, so seed every language root.
+      pages: [{ path: '/en' }, { path: '/id' }],
       prerender: {
         enabled: true,
         autoSubfolderIndex: true,
+      },
+      // Static hosts fall back to /index.html for paths that were not
+      // prerendered. Make it a data-less SPA shell so the client renders the
+      // requested route instead of failing to hydrate another page's markup.
+      spa: {
+        enabled: true,
+        prerender: { outputPath: '/index' },
       },
     }),
     viteReact(),
