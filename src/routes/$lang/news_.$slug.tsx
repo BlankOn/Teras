@@ -7,6 +7,15 @@ import SiteFooter from '@/components/site-footer'
 import { getNewsArticle } from '@/lib/news'
 
 export const Route = createFileRoute('/$lang/news_/$slug')({
+  head: ({ params }) => {
+    const article = getNewsArticle(params.slug, params.lang as NewsLang)
+    const section = params.lang === 'id' ? 'Berita' : 'News'
+    const title =
+      article?.title ?? articleContent[params.lang as NewsLang].notFoundTitle
+    return {
+      meta: [{ title: `BlankOn Linux - ${section} - ${title}` }],
+    }
+  },
   component: NewsArticlePage,
 })
 

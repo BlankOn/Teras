@@ -12,6 +12,7 @@ import defaultMdxComponents from 'fumadocs-ui/mdx'
 import { useFumadocsLoader } from 'fumadocs-core/source/client'
 import { baseOptions } from '@/lib/layout.shared'
 import { wikiSource } from '@/lib/source'
+import { staticServerFnMiddleware } from '@/lib/static-server-fn'
 import { Mermaid } from '@/components/mdx/mermaid'
 import type { PageTree } from 'fumadocs-core/server'
 
@@ -49,6 +50,7 @@ export const Route = createFileRoute('/$lang/wiki/$')({
 const serverLoader = createServerFn({
   method: 'GET',
 })
+  .middleware([staticServerFnMiddleware])
   .inputValidator((params: { slugs: Array<string>; lang: string }) => params)
   .handler(async ({ data: { slugs, lang } }) => {
     const page = wikiSource.getPage(slugs, lang)
@@ -56,7 +58,9 @@ const serverLoader = createServerFn({
 
     return {
       path: page.path,
-      pageTree: await wikiSource.serializePageTree(wikiSource.getPageTree(lang)),
+      pageTree: await wikiSource.serializePageTree(
+        wikiSource.getPageTree(lang),
+      ),
     }
   })
 
@@ -100,7 +104,10 @@ function Page() {
   const Content = clientLoader.getComponent(data.path)
 
   return (
-    <DocsLayout {...baseOptions(lang, true)} tree={collapseEmptyFolders(pageTree)}>
+    <DocsLayout
+      {...baseOptions(lang, true)}
+      tree={collapseEmptyFolders(pageTree)}
+    >
       <Content />
     </DocsLayout>
   )
