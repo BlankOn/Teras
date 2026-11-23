@@ -111,7 +111,7 @@ function NewsArticlePage() {
   return (
     <HomeLayout {...baseOptions(lang)}>
       <main className="flex flex-1 flex-col">
-        <section className="bg-fd-background py-20">
+        <section className="py-20">
           <div className="container mx-auto max-w-3xl px-6">
             <Link
               to="/$lang/news"

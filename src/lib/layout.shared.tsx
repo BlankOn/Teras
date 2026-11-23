@@ -91,7 +91,7 @@ function DevMenu({ locale }: { locale: string }) {
           cancelClose()
           setOpen((value) => (canHover() ? true : !value))
         }}
-        className="inline-flex items-center gap-1 px-2 py-0 text-fd-muted-foreground transition-colors hover:text-fd-accent-foreground max-sm:py-2 sm:h-full [&_svg]:size-4"
+        className="inline-flex items-center gap-1 px-2 py-0 text-sm text-fd-muted-foreground transition-colors hover:text-fd-accent-foreground max-sm:py-2 sm:h-full [&_svg]:size-4"
       >
         Development
         <svg
@@ -179,6 +179,9 @@ const translations = {
     wiki: 'Wiki',
     news: 'Berita',
     team: 'Tim',
+    teamSortByTeam: 'Per tim',
+    teamSortByName: 'Alfabetis',
+    teamSortLabel: 'Urutkan anggota',
     sponsorship: 'Sponsorship',
     donate: 'Donasi',
     welcome: 'Selamat datang di BlankOn',
@@ -241,6 +244,27 @@ const translations = {
       checksumNote: 'Selalu verifikasi checksum setelah mengunduh.',
       moreInfo: 'Informasi lebih lanjut',
       wikiLink: 'Baca Wiki',
+      donation: {
+        started: 'Unduhan Anda sudah dimulai',
+        title: 'Dukung BlankOn Linux',
+        body: 'BlankOn Linux adalah perangkat lunak bebas yang dikembangkan oleh para relawan. Donasi Anda membantu kami menjaga server tetap menyala, paket dan sistem tetap mutakhir, dan rilis berikutnya tetap berjalan.',
+        qrisTab: 'QRIS',
+        bankTab: 'Transfer Bank',
+        qrisAlt: 'Kode QRIS BlankOn Foundation',
+        bank: 'Bank',
+        swift: 'Kode SWIFT',
+        accountOwner: 'Nama Pemilik',
+        accountNumber: 'Nomor Rekening',
+        copy: 'Salin',
+        copied: 'Tersalin',
+        confirm:
+          'Setelah berdonasi, kirim email konfirmasi ke {email} agar donasi Anda tercatat dengan jelas.',
+        moreWays: 'Cara lain untuk mendukung',
+        later: 'Nanti saja',
+        noPressure:
+          'Tanpa kewajiban membayar donasi. Selamat menikmati BlankOn Linux!',
+        close: 'Tutup',
+      },
     },
     feedback: {
       question: 'Bagaimana panduan ini?',
@@ -401,6 +425,9 @@ const translations = {
     wiki: 'Wiki',
     news: 'News',
     team: 'Team',
+    teamSortByTeam: 'By team',
+    teamSortByName: 'Alphabetically',
+    teamSortLabel: 'Sort members',
     sponsorship: 'Sponsorship',
     donate: 'Donate',
     welcome: 'Welcome to BlankOn',
@@ -464,6 +491,26 @@ const translations = {
       checksumNote: 'Always verify the checksum after downloading.',
       moreInfo: 'More Information',
       wikiLink: 'Read the Wiki',
+      donation: {
+        started: 'Your download has started',
+        title: 'Support BlankOn Linux',
+        body: 'BlankOn Linux is free software built by volunteers. Your donation helps us keep the servers running, the packages fresh, and the next release on its way.',
+        qrisTab: 'QRIS',
+        bankTab: 'Bank Transfer',
+        qrisAlt: 'BlankOn Foundation QRIS code',
+        bank: 'Bank',
+        swift: 'SWIFT Code',
+        accountOwner: 'Account Owner',
+        accountNumber: 'Account Number',
+        copy: 'Copy',
+        copied: 'Copied',
+        confirm:
+          'After donating, please email {email} so we can record your donation clearly.',
+        moreWays: 'More ways to support',
+        later: 'Maybe later',
+        noPressure: 'No payment required. Enjoy BlankOn!',
+        close: 'Close',
+      },
     },
     feedback: {
       question: 'How is this guide?',

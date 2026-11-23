@@ -1,9 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock'
 import { HomeLayout } from 'fumadocs-ui/layouts/home'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { baseOptions, getTranslations } from '@/lib/layout.shared'
 import SiteFooter from '@/components/site-footer'
+import { DonationDialog } from '@/components/donation-dialog'
 
 export const Route = createFileRoute('/$lang/download')({ component: Download })
 
@@ -108,6 +109,7 @@ function ReleasePanel({
   releaseValue,
   warning,
   zsync,
+  onDownload,
 }: {
   d: ReturnType<typeof getTranslations>['downloadPage']
   isoUrl: string
@@ -116,6 +118,7 @@ function ReleasePanel({
   warning?: string
   // Only the build that moves every day is worth following with zsync.
   zsync?: boolean
+  onDownload: () => void
 }) {
   const filename = isoFilename(isoUrl)
 
@@ -142,6 +145,12 @@ function ReleasePanel({
 
         <a
           href={isoUrl}
+          onClick={(e) => {
+            // A middle or modified click opens a tab or saves elsewhere rather
+            // than starting the download here, so there's nothing to follow up.
+            if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey) return
+            onDownload()
+          }}
           className="mt-5 flex w-full items-center justify-center gap-2 rounded-md bg-fd-primary px-6 py-2.5 text-sm font-medium text-fd-primary-foreground transition-colors hover:bg-fd-primary/90"
         >
           <DownloadIcon className="h-4 w-4" />
@@ -243,6 +252,17 @@ function Download() {
   const rolling = useRollingRelease()
 
   const [tab, setTab] = useState<'rolling' | 'development'>('rolling')
+  const [donationOpen, setDonationOpen] = useState(false)
+  const donationTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
+  useEffect(() => () => clearTimeout(donationTimer.current), [])
+
+  // Asked on every download, not just the first.
+  const askForDonation = () => {
+    clearTimeout(donationTimer.current)
+    // Give the browser a moment to pick up the download first, so the
+    // dialog lands on a download already in progress rather than racing it.
+    donationTimer.current = setTimeout(() => setDonationOpen(true), 1000)
+  }
 
   const tabs = [
     { id: 'rolling' as const, label: d.rollingTab },
@@ -286,6 +306,7 @@ function Download() {
               isoUrl={rolling.isoUrl}
               sha256sumUrl={rolling.sha256sumUrl}
               releaseValue={d.rollingReleaseValue}
+              onDownload={askForDonation}
             />
           ) : (
             <RollingPending message={d.rollingChecking} />
@@ -298,9 +319,16 @@ function Download() {
             releaseValue={d.releaseTypeValue}
             warning={d.dailyBuildWarning}
             zsync
+            onDownload={askForDonation}
           />
         )}
       </main>
+      <DonationDialog
+        open={donationOpen}
+        onClose={() => setDonationOpen(false)}
+        lang={lang}
+        s={d.donation}
+      />
       <SiteFooter lang={lang} />
     </HomeLayout>
   )
