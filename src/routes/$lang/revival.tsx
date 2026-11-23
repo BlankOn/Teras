@@ -84,11 +84,6 @@ const ROSTER: Array<{
     role: { id: 'Pemelihara Paket', en: 'Package Maintainer' },
   },
   {
-    name: 'Raffi Febriandika Utama',
-    github: 'raffifu',
-    role: { id: 'Pemelihara Paket', en: 'Package Maintainer' },
-  },
-  {
     name: 'Rusmanto',
     avatar: 'https://blankon.id/images/rusmanto.jpg',
     url: FOUNDATION_URL,

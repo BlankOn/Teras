@@ -75,23 +75,59 @@ function MemberAvatar({ name, github }: { name: string; github: string }) {
 function Team() {
   const { lang } = Route.useParams()
   const t = getTranslations(lang)
+  const [sortBy, setSortBy] = useState<'team' | 'name'>('team')
+
+  // contributors.json lists members team by team, in the order of
+  // Contributors.md, so sorting "by team" keeps that order and only orders
+  // names within each team.
+  const teamOrder: Array<string> = []
+  const members = contributorsData.contributors.filter(
+    (m) => m.project === 'blankonlinux',
+  )
+  for (const m of members) {
+    if (!teamOrder.includes(m.contribution.en))
+      teamOrder.push(m.contribution.en)
+  }
+  const sorted = [...members].sort((a, b) =>
+    sortBy === 'team'
+      ? teamOrder.indexOf(a.contribution.en) -
+          teamOrder.indexOf(b.contribution.en) || a.name.localeCompare(b.name)
+      : a.name.localeCompare(b.name),
+  )
+  const sortOptions = [
+    { id: 'team' as const, label: t.teamSortByTeam },
+    { id: 'name' as const, label: t.teamSortByName },
+  ]
 
   return (
     <HomeLayout {...baseOptions(lang)}>
       <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col px-4 py-16">
-        <h1 className="mb-8 text-center text-3xl font-bold">{t.team}</h1>
+        <h1 className="text-center text-3xl font-bold">{t.team}</h1>
+        <div
+          role="group"
+          aria-label={t.teamSortLabel}
+          className="mx-auto mb-8 mt-4 inline-flex self-center rounded-full border border-fd-border p-0.5 text-xs"
+        >
+          {sortOptions.map(({ id, label }) => (
+            <button
+              key={id}
+              type="button"
+              aria-pressed={sortBy === id}
+              onClick={() => setSortBy(id)}
+              className={`rounded-full px-3 py-1 font-medium transition-colors ${
+                sortBy === id
+                  ? 'bg-fd-primary text-fd-primary-foreground'
+                  : 'text-fd-muted-foreground hover:text-fd-foreground'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {contributorsData.contributors
-            .filter((m) => m.project === 'blankonlinux')
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .map((member) => (
-              <a
-                key={member.github}
-                href={`https://github.com/${member.github}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex flex-col items-center rounded-xl p-4 text-center transition-colors hover:bg-fd-accent"
-              >
+          {sorted.map((member) => {
+            const card = (
+              <>
                 <MemberAvatar name={member.name} github={member.github} />
                 <p className="mt-3 text-base font-medium text-fd-foreground">
                   {member.name}
@@ -103,8 +139,28 @@ function Team() {
                     ]
                   }
                 </p>
+              </>
+            )
+            // Not everyone on the team has a GitHub account to point at.
+            return member.github ? (
+              <a
+                key={member.name}
+                href={`https://github.com/${member.github}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col items-center rounded-xl p-4 text-center transition-colors hover:bg-fd-accent"
+              >
+                {card}
               </a>
-            ))}
+            ) : (
+              <div
+                key={member.name}
+                className="flex flex-col items-center rounded-xl p-4 text-center"
+              >
+                {card}
+              </div>
+            )
+          })}
         </div>
 
         <div className="mt-16 text-center">

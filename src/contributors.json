@@ -4,66 +4,198 @@
       "name": "Harry Suryapambagya",
       "github": "harsxv",
       "project": "blankonlinux",
-      "contribution": { "id": "Infrastruktur", "en": "Infrastructure" }
+      "contribution": {
+        "id": "Infrastruktur",
+        "en": "Infrastructure"
+      }
     },
     {
       "name": "Firmansyah Dzakwan Arifien",
       "github": "FirmansyahDzakwanArifien",
       "project": "blankonlinux",
-      "contribution": { "id": "Infrastruktur", "en": "Infrastructure" }
+      "contribution": {
+        "id": "Infrastruktur",
+        "en": "Infrastructure"
+      }
+    },
+    {
+      "name": "Alif Radhitya Wardana",
+      "github": "radhityax",
+      "project": "blankonlinux",
+      "contribution": {
+        "id": "Infrastruktur",
+        "en": "Infrastructure"
+      }
     },
     {
       "name": "Herpiko Dwi Aguno",
       "github": "herpiko",
       "project": "blankonlinux",
-      "contribution": { "id": "Pemelihara Paket", "en": "Package Maintainer" }
+      "contribution": {
+        "id": "Pemelihara Paket",
+        "en": "Package Maintainer"
+      }
     },
     {
       "name": "Lucky Mahendra Purba",
       "github": "luckynee",
       "project": "blankonlinux",
-      "contribution": { "id": "Pemelihara Paket", "en": "Package Maintainer" }
-    },
-    {
-      "name": "Raffi Febriandika Utama",
-      "github": "raffifu",
-      "project": "blankonlinux",
-      "contribution": { "id": "Pemelihara Paket", "en": "Package Maintainer" }
+      "contribution": {
+        "id": "Pemelihara Paket",
+        "en": "Package Maintainer"
+      }
     },
     {
       "name": "Mohammad Raska",
       "github": "Adekabang",
       "project": "blankonlinux",
-      "contribution": { "id": "Pemelihara Paket", "en": "Package Maintainer" }
+      "contribution": {
+        "id": "Pemelihara Paket",
+        "en": "Package Maintainer"
+      }
+    },
+    {
+      "name": "James Ed Randson",
+      "github": "jimed-rand",
+      "project": "blankonlinux",
+      "contribution": {
+        "id": "Pemelihara Paket",
+        "en": "Package Maintainer"
+      }
+    },
+    {
+      "name": "Febriyanto Nugroho",
+      "github": "febnug",
+      "project": "blankonlinux",
+      "contribution": {
+        "id": "Pemelihara Paket",
+        "en": "Package Maintainer"
+      }
     },
     {
       "name": "Atqa Munzir Zakaria",
       "github": "atqamz",
       "project": "blankonlinux",
-      "contribution": { "id": "Riset dan Pengembangan", "en": "Research and Development" }
+      "contribution": {
+        "id": "Riset dan Pengembangan",
+        "en": "Research and Development"
+      }
     },
     {
       "name": "Aris Fathur Rahman",
       "github": "ar1sfr",
       "project": "blankonlinux",
-      "contribution": { "id": "Riset dan Pengembangan", "en": "Research and Development" }
+      "contribution": {
+        "id": "Riset dan Pengembangan",
+        "en": "Research and Development"
+      }
     },
     {
-      "name": "Akhyar Amarullah",
-      "github": "akhy",
-      "contribution": { "id": "Pemelihara Warta", "en": "Warta Maintainer" }
-    },
-    {
-      "name": "Hanhan Husna",
-      "github": "hahn",
+      "name": "Sendy Aditya Suryana",
+      "github": "sendz",
       "project": "blankonlinux",
-      "contribution": { "id": "Pemelihara Paket", "en": "Package Maintainer" }
+      "contribution": {
+        "id": "Riset dan Pengembangan",
+        "en": "Research and Development"
+      }
+    },
+    {
+      "name": "Restu Haqqi Muzakir",
+      "github": "restuhaqza",
+      "project": "blankonlinux",
+      "contribution": {
+        "id": "Riset dan Pengembangan",
+        "en": "Research and Development"
+      }
+    },
+    {
+      "name": "Boim",
+      "github": "",
+      "project": "blankonlinux",
+      "contribution": {
+        "id": "Penjaminan Mutu",
+        "en": "Quality Assurance"
+      }
+    },
+    {
+      "name": "Yudhistira Wardhana",
+      "github": "ydhstraw",
+      "project": "blankonlinux",
+      "contribution": {
+        "id": "Penjaminan Mutu",
+        "en": "Quality Assurance"
+      }
+    },
+    {
+      "name": "Marcelio Desendra Adivio",
+      "github": "marceliodes",
+      "project": "blankonlinux",
+      "contribution": {
+        "id": "Penjaminan Mutu",
+        "en": "Quality Assurance"
+      }
+    },
+    {
+      "name": "Dirga Yuza",
+      "github": "mybday123",
+      "project": "blankonlinux",
+      "contribution": {
+        "id": "Penjaminan Mutu",
+        "en": "Quality Assurance"
+      }
+    },
+    {
+      "name": "Kamal Fasya",
+      "github": "kkkfasya",
+      "project": "blankonlinux",
+      "contribution": {
+        "id": "Penjaminan Mutu",
+        "en": "Quality Assurance"
+      }
+    },
+    {
+      "name": "Ilham Fauzan",
+      "github": "ilhamfauzan",
+      "project": "blankonlinux",
+      "contribution": {
+        "id": "Penjaminan Mutu",
+        "en": "Quality Assurance"
+      }
+    },
+    {
+      "name": "Chairul Akmal",
+      "github": "chairulakmal",
+      "project": "blankonlinux",
+      "contribution": {
+        "id": "Dokumentasi",
+        "en": "Documentation"
+      }
     },
     {
       "name": "Sistiandy Syahbana Nugraha",
       "github": "siscms",
       "project": "blankonlinux",
-      "contribution": { "id": "Hubungan Masyarakat", "en": "Public Relation" }
+      "contribution": {
+        "id": "Hubungan Masyarakat",
+        "en": "Public Relation"
+      }
+    },
+    {
+      "name": "Shaella Suhendro",
+      "github": "tanshaella",
+      "project": "blankonlinux",
+      "contribution": {
+        "id": "Hubungan Masyarakat",
+        "en": "Public Relation"
+      }
+    },
+    {
+      "name": "Akhyar Amarullah",
+      "github": "akhy",
+      "contribution": {
+        "id": "Pemelihara Warta",
+        "en": "Warta Maintainer"
+      }
     }
   ],
   "donors": [

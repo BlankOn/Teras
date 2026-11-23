@@ -1,5 +1,6 @@
 import { createFileRoute, notFound } from '@tanstack/react-router'
 import { DocsLayout } from 'fumadocs-ui/layouts/docs'
+import { HomeLayout } from 'fumadocs-ui/layouts/home'
 import { createServerFn } from '@tanstack/react-start'
 import browserCollections from 'fumadocs-mdx:collections/browser'
 import {
@@ -10,13 +11,13 @@ import {
 } from 'fumadocs-ui/layouts/docs/page'
 import defaultMdxComponents from 'fumadocs-ui/mdx'
 import { useFumadocsLoader } from 'fumadocs-core/source/client'
-import { baseOptions } from '@/lib/layout.shared'
+import type { PageTree } from 'fumadocs-core/server'
+import { baseOptions, getTranslations } from '@/lib/layout.shared'
 import { wikiSource } from '@/lib/source'
 import { staticServerFnMiddleware } from '@/lib/static-server-fn'
 import { Mermaid } from '@/components/mdx/mermaid'
-import type { PageTree } from 'fumadocs-core/server'
 
-function transformNodes(nodes: PageTree.Node[]): PageTree.Node[] {
+function transformNodes(nodes: Array<PageTree.Node>): Array<PageTree.Node> {
   return nodes.flatMap((node) => {
     if (node.type === 'folder') {
       const children = transformNodes(node.children)
@@ -104,11 +105,24 @@ function Page() {
   const Content = clientLoader.getComponent(data.path)
 
   return (
-    <DocsLayout
-      {...baseOptions(lang, true)}
-      tree={collapseEmptyFolders(pageTree)}
-    >
-      <Content />
-    </DocsLayout>
+    // The site's own header, exactly as every other page has it, with the
+    // docs layout underneath for the sidebar. The header is sticky at h-14,
+    // so the docs layout treats it as a banner and pins its sidebar below it.
+    <HomeLayout {...baseOptions(lang)}>
+      <DocsLayout
+        tree={collapseEmptyFolders(pageTree)}
+        // The header above already carries the logo, language and theme
+        // toggles; the sidebar keeps only the page tree and the wiki search.
+        // Its own bar only shows on phones, where it opens the sidebar.
+        nav={{ title: getTranslations(lang).wiki, url: `/${lang}/wiki/` }}
+        themeSwitch={{ enabled: false }}
+        searchToggle={{ enabled: true }}
+        containerProps={{
+          style: { '--fd-banner-height': '3.5rem' } as React.CSSProperties,
+        }}
+      >
+        <Content />
+      </DocsLayout>
+    </HomeLayout>
   )
 }
